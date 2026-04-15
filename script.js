@@ -1597,6 +1597,85 @@ const InternetSimulator = {
   }
 };
 
+const ConclusionSection = {
+  section: null,
+  burstLayer: null,
+  observer: null,
+  hasBurstPlayed: false,
+  reduceMotionQuery: window.matchMedia('(prefers-reduced-motion: reduce)'),
+
+  init() {
+    this.section = document.getElementById('credits');
+    if (!this.section) return;
+
+    this.burstLayer = this.section.querySelector('[data-conclusion-burst]');
+    if (!this.burstLayer) return;
+
+    if (!('IntersectionObserver' in window)) {
+      this._triggerBurst();
+      return;
+    }
+
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          this._triggerBurst();
+          if (this.observer) {
+            this.observer.disconnect();
+            this.observer = null;
+          }
+        });
+      },
+      {
+        threshold: 0.32,
+        rootMargin: '0px 0px -14% 0px'
+      }
+    );
+
+    this.observer.observe(this.section);
+  },
+
+  _triggerBurst() {
+    if (this.hasBurstPlayed) return;
+    this.hasBurstPlayed = true;
+
+    if (this.reduceMotionQuery.matches) return;
+    if (!this.burstLayer) return;
+
+    const rect = this.section.getBoundingClientRect();
+    const cx = rect.width * 0.5;
+    const cy = Math.min(rect.height * 0.42, 260);
+    const particleCount = window.innerWidth <= 768 ? 26 : 42;
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('span');
+      particle.className = 'conclusion-particle';
+
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 48 + Math.random() * (window.innerWidth <= 768 ? 110 : 170);
+      const dx = Math.cos(angle) * distance;
+      const dy = Math.sin(angle) * distance - (18 + Math.random() * 38);
+      const rot = -180 + Math.random() * 360;
+      const size = 5 + Math.random() * 7;
+      const hue = [160, 190, 210, 330, 35][Math.floor(Math.random() * 5)];
+
+      particle.style.left = `${cx}px`;
+      particle.style.top = `${cy}px`;
+      particle.style.setProperty('--dx', `${dx}px`);
+      particle.style.setProperty('--dy', `${dy}px`);
+      particle.style.setProperty('--rot', `${rot}deg`);
+      particle.style.setProperty('--size', `${size}px`);
+      particle.style.setProperty('--hue', String(hue));
+
+      this.burstLayer.appendChild(particle);
+      particle.addEventListener('animationend', () => {
+        particle.remove();
+      }, { once: true });
+    }
+  }
+};
+
 function updateToggleIcon() {
   const moon = document.getElementById('icon-moon');
   const sun  = document.getElementById('icon-sun');
@@ -1623,6 +1702,7 @@ document.addEventListener('DOMContentLoaded', () => {
   FutureSection.init();
   PollSection.init();
   InternetSimulator.init();
+  ConclusionSection.init();
   updateToggleIcon();
 
   // Phase 2: Hero
