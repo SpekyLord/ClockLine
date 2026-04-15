@@ -1033,6 +1033,331 @@ section {
   }
 }
 
+/* —— Section 5: Challenges & Ethical Issues ——————————————— */
+.challenges-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 14% 18%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 30%),
+    radial-gradient(circle at 84% 78%, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 34%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 88%, #14070f), color-mix(in srgb, var(--color-bg) 94%, #05070d));
+}
+
+.challenges-layout {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.challenges-heading {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 780px;
+}
+
+.challenges-heading h2 {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  max-width: 12ch;
+}
+
+.challenges-intro {
+  color: var(--color-text-secondary);
+  max-width: 62ch;
+}
+
+.challenges-carousel {
+  display: grid;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.challenges-stage-shell {
+  --challenge-shift-near: clamp(1.25rem, 7vw, 7.5rem);
+  --challenge-shift-far: clamp(2.25rem, 12vw, 11rem);
+  position: relative;
+  min-height: clamp(28rem, 58vw, 33rem);
+  overflow: clip;
+}
+
+.challenges-stage {
+  position: relative;
+  min-height: inherit;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.challenge-card {
+  --stack-x: 0px;
+  --stack-scale: 0.82;
+  --stack-rotate: 0deg;
+  --stack-opacity: 0;
+  --stack-blur: 5px;
+  --stack-z: 1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: min(100%, 44rem);
+  padding: 1.45rem;
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  border-radius: 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 14%, transparent);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 40%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 98%, transparent), color-mix(in srgb, var(--color-surface) 92%, transparent));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 10%, transparent),
+    0 24px 48px color-mix(in srgb, #000 22%, transparent);
+  backdrop-filter: blur(14px);
+  transform: translateX(calc(-50% + var(--stack-x))) scale(var(--stack-scale)) rotate(var(--stack-rotate));
+  transform-origin: center center;
+  opacity: var(--stack-opacity);
+  filter: blur(var(--stack-blur));
+  z-index: var(--stack-z);
+  pointer-events: none;
+  transition:
+    transform 700ms var(--easing),
+    opacity 500ms var(--easing),
+    filter 500ms var(--easing),
+    border-color var(--duration-hover) var(--easing),
+    box-shadow var(--duration-hover) var(--easing);
+}
+
+.challenge-card.is-active {
+  --stack-scale: 1;
+  --stack-opacity: 1;
+  --stack-blur: 0px;
+  --stack-z: 5;
+  pointer-events: auto;
+  border-color: color-mix(in srgb, var(--color-accent) 28%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 12%, transparent),
+    0 28px 54px color-mix(in srgb, var(--color-accent) 14%, transparent);
+}
+
+.challenge-card.is-prev {
+  --stack-x: calc(var(--challenge-shift-near) * -1);
+  --stack-scale: 0.92;
+  --stack-rotate: -5deg;
+  --stack-opacity: 0.74;
+  --stack-blur: 0.4px;
+  --stack-z: 4;
+}
+
+.challenge-card.is-next {
+  --stack-x: var(--challenge-shift-near);
+  --stack-scale: 0.92;
+  --stack-rotate: 5deg;
+  --stack-opacity: 0.74;
+  --stack-blur: 0.4px;
+  --stack-z: 4;
+}
+
+.challenge-card.is-before {
+  --stack-x: calc(var(--challenge-shift-far) * -1);
+  --stack-scale: 0.85;
+  --stack-rotate: -8deg;
+  --stack-opacity: 0.28;
+  --stack-blur: 1.6px;
+  --stack-z: 3;
+}
+
+.challenge-card.is-after {
+  --stack-x: var(--challenge-shift-far);
+  --stack-scale: 0.85;
+  --stack-rotate: 8deg;
+  --stack-opacity: 0.28;
+  --stack-blur: 1.6px;
+  --stack-z: 3;
+}
+
+.challenge-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.challenge-card-eyebrow,
+.challenge-card-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.challenge-card-eyebrow {
+  color: var(--color-accent);
+}
+
+.challenge-card-icon {
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.95rem;
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-bg) 32%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.challenge-card-icon svg,
+.challenges-nav svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.challenge-card-copy {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.challenge-card-copy h3 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  max-width: 12ch;
+}
+
+.challenge-card-copy p {
+  color: var(--color-text-secondary);
+  max-width: 40ch;
+}
+
+.challenge-card-example-box {
+  margin-top: auto;
+  display: grid;
+  gap: 0.7rem;
+  padding: 1rem;
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 14%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 22%, transparent), transparent),
+    color-mix(in srgb, var(--color-bg) 30%, transparent);
+}
+
+.challenge-card-label {
+  color: var(--color-primary);
+}
+
+.challenge-card-example {
+  color: var(--color-text-primary);
+}
+
+.challenges-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.95rem;
+}
+
+.challenges-nav {
+  width: 2.9rem;
+  height: 2.9rem;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 24%, transparent);
+  background-color: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  color: var(--color-primary);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition:
+    transform var(--duration-hover) var(--easing),
+    box-shadow var(--duration-hover) var(--easing),
+    border-color var(--duration-hover) var(--easing),
+    background-color var(--duration-hover) var(--easing);
+}
+
+.challenges-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.challenges-dot {
+  width: 0.82rem;
+  height: 0.82rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 36%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    transform var(--duration-hover) var(--easing),
+    box-shadow var(--duration-hover) var(--easing),
+    border-color var(--duration-hover) var(--easing),
+    background-color var(--duration-hover) var(--easing),
+    width var(--duration-hover) var(--easing);
+}
+
+.challenges-dot.is-active {
+  width: 2.4rem;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
+  border-color: transparent;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--color-accent) 24%, transparent);
+}
+
+@media (hover: hover) {
+  .challenge-card.is-active:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 12%, transparent),
+      0 0 28px color-mix(in srgb, var(--color-accent) 16%, transparent);
+  }
+
+  .challenges-nav:hover,
+  .challenges-dot:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--color-primary) 48%, transparent);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--color-primary) 16%, transparent);
+  }
+}
+
+@media (max-width: 767px) {
+  .challenges-stage-shell {
+    --challenge-shift-near: 1.4rem;
+    --challenge-shift-far: 2.35rem;
+    min-height: 30rem;
+  }
+
+  .challenge-card {
+    width: 100%;
+    padding: 1.2rem;
+  }
+
+  .challenge-card.is-prev,
+  .challenge-card.is-next {
+    --stack-opacity: 0.52;
+  }
+
+  .challenge-card.is-before,
+  .challenge-card.is-after {
+    --stack-opacity: 0.12;
+  }
+}
+
+@media (min-width: 768px) {
+  .challenges-layout {
+    gap: 1.85rem;
+  }
+
+  .challenge-card {
+    padding: 1.65rem;
+  }
+}
+
 /* ── Utility: Container ─────────────────────────────────────── */
 .container {
   max-width: 1280px;

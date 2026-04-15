@@ -986,9 +986,150 @@
   <!-- ============================================================
        SECTION 5: CHALLENGES & ETHICAL ISSUES
        ============================================================ -->
-  <!-- TODO: Implement in Phase 6 -->
-  <section id="challenges" aria-label="Challenges and ethical issues">
-    <p><!-- Phase 6: Ethical issues card stack goes here --></p>
+  <section id="challenges" class="challenges-section" aria-labelledby="challenges-title">
+    <div class="container challenges-layout">
+      <div class="challenges-heading">
+        <p class="section-label reveal">Risks We Still Need to Solve</p>
+        <h2 id="challenges-title" class="reveal">The same networks that empower us can also scale harm</h2>
+        <p class="challenges-intro reveal">
+          The Information Age unlocked speed, reach, and convenience, but it also amplified old human problems into
+          systems that now operate around the clock.
+        </p>
+      </div>
+
+      <div class="challenges-carousel reveal" data-challenges-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="Challenges and ethical issues carousel">
+        <div class="challenges-stage-shell">
+          <div class="challenges-stage" data-challenge-stage>
+            <article class="challenge-card is-active" data-challenge-card data-challenge-title="Privacy" aria-hidden="false">
+              <div class="challenge-card-top">
+                <span class="challenge-card-eyebrow">Challenge 01</span>
+                <span class="challenge-card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="presentation">
+                    <path d="M12 3 5 6v5c0 5 3.4 8.7 7 10 3.6-1.3 7-5 7-10V6l-7-3z"/>
+                    <path d="M9.5 11.5V10a2.5 2.5 0 1 1 5 0v1.5"/>
+                    <rect x="8.5" y="11.5" width="7" height="5" rx="1.2"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="challenge-card-copy">
+                <h3>Privacy</h3>
+                <p>Every search, scroll, and location ping can become part of a profile that companies analyze, sell, or monitor.</p>
+              </div>
+              <div class="challenge-card-example-box">
+                <p class="challenge-card-label">Real-world example</p>
+                <p class="challenge-card-example">Cambridge Analytica exposed how Facebook user data could be harvested to influence political advertising at scale.</p>
+              </div>
+            </article>
+
+            <article class="challenge-card" data-challenge-card data-challenge-title="Misinformation" aria-hidden="true">
+              <div class="challenge-card-top">
+                <span class="challenge-card-eyebrow">Challenge 02</span>
+                <span class="challenge-card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="presentation">
+                    <path d="M12 3 3 7.5l9 4.5 9-4.5L12 3z"/>
+                    <path d="M6 10.5V15l6 3 6-3v-4.5"/>
+                    <path d="M12 12v6"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="challenge-card-copy">
+                <h3>Misinformation</h3>
+                <p>False or misleading content can spread faster than corrections because algorithms reward speed, novelty, and outrage.</p>
+              </div>
+              <div class="challenge-card-example-box">
+                <p class="challenge-card-label">Real-world example</p>
+                <p class="challenge-card-example">Deepfake clips, fake news pages, and viral election rumors have shaped public trust before fact-checkers can catch up.</p>
+              </div>
+            </article>
+
+            <article class="challenge-card" data-challenge-card data-challenge-title="Digital Divide" aria-hidden="true">
+              <div class="challenge-card-top">
+                <span class="challenge-card-eyebrow">Challenge 03</span>
+                <span class="challenge-card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="presentation">
+                    <path d="M4 8h16"/>
+                    <path d="M6 5h12l2 11H4L6 5z"/>
+                    <path d="M9 19h6"/>
+                    <path d="M10 16v3m4-3v3"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="challenge-card-copy">
+                <h3>Digital Divide</h3>
+                <p>The Information Age expands opportunity, but only for people who can afford reliable devices, signal, and data.</p>
+              </div>
+              <div class="challenge-card-example-box">
+                <p class="challenge-card-label">Real-world example</p>
+                <p class="challenge-card-example">In the Philippines, many rural learners still face weaker connectivity and higher effective data costs than students in major cities.</p>
+              </div>
+            </article>
+
+            <article class="challenge-card" data-challenge-card data-challenge-title="Mental Health" aria-hidden="true">
+              <div class="challenge-card-top">
+                <span class="challenge-card-eyebrow">Challenge 04</span>
+                <span class="challenge-card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="presentation">
+                    <path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/>
+                    <path d="M9 11.5c.5-.67 1.17-1 2-1s1.5.33 2 1"/>
+                    <path d="M8.5 8.5h.01M15.5 8.5h.01"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="challenge-card-copy">
+                <h3>Mental Health</h3>
+                <p>Always-on feeds can intensify doomscrolling, addictive habits, social comparison, and the feeling that rest must compete with notifications.</p>
+              </div>
+              <div class="challenge-card-example-box">
+                <p class="challenge-card-label">Real-world example</p>
+                <p class="challenge-card-example">Endless scrolling, streak systems, and late-night alerts can turn a quick check-in into hours of anxious attention.</p>
+              </div>
+            </article>
+
+            <article class="challenge-card" data-challenge-card data-challenge-title="AI Ethics" aria-hidden="true">
+              <div class="challenge-card-top">
+                <span class="challenge-card-eyebrow">Challenge 05</span>
+                <span class="challenge-card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="presentation">
+                    <path d="M8 6a4 4 0 0 1 8 0v1h1.5A2.5 2.5 0 0 1 20 9.5v5A2.5 2.5 0 0 1 17.5 17H16v1a4 4 0 1 1-8 0v-1H6.5A2.5 2.5 0 0 1 4 14.5v-5A2.5 2.5 0 0 1 6.5 7H8V6z"/>
+                    <path d="M9 12h6M12 9v6"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="challenge-card-copy">
+                <h3>AI Ethics</h3>
+                <p>AI can scale decisions quickly, but bias, opaque logic, and weak accountability can also scale harm just as fast.</p>
+              </div>
+              <div class="challenge-card-example-box">
+                <p class="challenge-card-label">Real-world example</p>
+                <p class="challenge-card-example">Hiring filters, facial recognition, and automated scoring systems can disadvantage people without clear explanations or appeals.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="challenges-controls" aria-label="Carousel controls">
+          <button class="challenges-nav" type="button" data-challenge-prev aria-label="Show previous ethical issue">
+            <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+              <path d="m15 6-6 6 6 6"/>
+            </svg>
+          </button>
+
+          <div class="challenges-dots" aria-label="Choose an ethical issue">
+            <button class="challenges-dot is-active" type="button" data-challenge-dot data-challenge-index="0" aria-label="Go to Privacy issue" aria-current="true"></button>
+            <button class="challenges-dot" type="button" data-challenge-dot data-challenge-index="1" aria-label="Go to Misinformation issue"></button>
+            <button class="challenges-dot" type="button" data-challenge-dot data-challenge-index="2" aria-label="Go to Digital Divide issue"></button>
+            <button class="challenges-dot" type="button" data-challenge-dot data-challenge-index="3" aria-label="Go to Mental Health issue"></button>
+            <button class="challenges-dot" type="button" data-challenge-dot data-challenge-index="4" aria-label="Go to AI Ethics issue"></button>
+          </div>
+
+          <button class="challenges-nav" type="button" data-challenge-next aria-label="Show next ethical issue">
+            <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+              <path d="m9 6 6 6-6 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ============================================================

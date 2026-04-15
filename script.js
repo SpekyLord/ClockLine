@@ -615,6 +615,238 @@ const ImpactSection = {
   }
 };
 
+const ChallengesSection = {
+  section: null,
+  carousel: null,
+  stage: null,
+  cards: [],
+  dots: [],
+  prevButton: null,
+  nextButton: null,
+  activeIndex: 0,
+  autoplayTimer: null,
+  resumeTimer: null,
+  autoplayDelay: 4800,
+  resumeDelay: 8000,
+  swipeThreshold: 48,
+  isHovering: false,
+  isFocusWithin: false,
+  isTouching: false,
+  touchStartX: 0,
+  touchCurrentX: 0,
+  hoverQuery: window.matchMedia('(hover: hover)'),
+
+  init() {
+    this.section = document.getElementById('challenges');
+    if (!this.section) return;
+
+    this.carousel = this.section.querySelector('[data-challenges-carousel]');
+    this.stage = this.section.querySelector('[data-challenge-stage]');
+    this.cards = Array.from(this.section.querySelectorAll('[data-challenge-card]'));
+    this.dots = Array.from(this.section.querySelectorAll('[data-challenge-dot]'));
+    this.prevButton = this.section.querySelector('[data-challenge-prev]');
+    this.nextButton = this.section.querySelector('[data-challenge-next]');
+
+    if (!this.carousel || !this.stage || !this.cards.length) return;
+
+    this._bindControls();
+    this._bindHover();
+    this._bindFocus();
+    this._bindKeyboard();
+    this._bindTouch();
+    this._updateUi();
+    this._startAutoplay();
+  },
+
+  _bindControls() {
+    if (this.prevButton) {
+      this.prevButton.addEventListener('click', () => {
+        this.goTo(this.activeIndex - 1, { userInitiated: true });
+      });
+    }
+
+    if (this.nextButton) {
+      this.nextButton.addEventListener('click', () => {
+        this.goTo(this.activeIndex + 1, { userInitiated: true });
+      });
+    }
+
+    this.dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        this.goTo(index, { userInitiated: true });
+      });
+    });
+  },
+
+  _bindHover() {
+    if (!this.hoverQuery.matches) return;
+
+    this.carousel.addEventListener('mouseenter', () => {
+      this.isHovering = true;
+      this._pauseAutoplay();
+    });
+
+    this.carousel.addEventListener('mouseleave', () => {
+      this.isHovering = false;
+      this._scheduleResume();
+    });
+  },
+
+  _bindFocus() {
+    this.carousel.addEventListener('focusin', () => {
+      this.isFocusWithin = true;
+      this._pauseAutoplay();
+    });
+
+    this.carousel.addEventListener('focusout', () => {
+      requestAnimationFrame(() => {
+        this.isFocusWithin = this.carousel.contains(document.activeElement);
+        if (!this.isFocusWithin) {
+          this._scheduleResume();
+        }
+      });
+    });
+  },
+
+  _bindKeyboard() {
+    this.carousel.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        this.goTo(this.activeIndex + 1, { userInitiated: true });
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        this.goTo(this.activeIndex - 1, { userInitiated: true });
+      }
+    });
+  },
+
+  _bindTouch() {
+    this.stage.addEventListener('touchstart', (event) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+
+      this.isTouching = true;
+      this.touchStartX = touch.clientX;
+      this.touchCurrentX = touch.clientX;
+      this._pauseAutoplay();
+    }, { passive: true });
+
+    this.stage.addEventListener('touchmove', (event) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      this.touchCurrentX = touch.clientX;
+    }, { passive: true });
+
+    this.stage.addEventListener('touchend', () => {
+      const deltaX = this.touchCurrentX - this.touchStartX;
+      this.isTouching = false;
+
+      if (Math.abs(deltaX) >= this.swipeThreshold) {
+        const direction = deltaX > 0 ? -1 : 1;
+        this.goTo(this.activeIndex + direction, { userInitiated: true });
+        return;
+      }
+
+      this._scheduleResume();
+    }, { passive: true });
+
+    this.stage.addEventListener('touchcancel', () => {
+      this.isTouching = false;
+      this._scheduleResume();
+    }, { passive: true });
+  },
+
+  _pauseAutoplay() {
+    clearTimeout(this.autoplayTimer);
+    clearTimeout(this.resumeTimer);
+    this.autoplayTimer = null;
+    this.resumeTimer = null;
+  },
+
+  _startAutoplay() {
+    if (this.autoplayTimer || this.isHovering || this.isFocusWithin || this.isTouching) return;
+
+    this.autoplayTimer = window.setTimeout(() => {
+      this.autoplayTimer = null;
+      this.goTo(this.activeIndex + 1, { autoplay: true });
+      this._startAutoplay();
+    }, this.autoplayDelay);
+  },
+
+  _scheduleResume() {
+    clearTimeout(this.resumeTimer);
+    this.resumeTimer = null;
+
+    if (this.isHovering || this.isFocusWithin || this.isTouching) return;
+
+    this.resumeTimer = window.setTimeout(() => {
+      this.resumeTimer = null;
+      if (this.isHovering || this.isFocusWithin || this.isTouching) return;
+      this.goTo(this.activeIndex + 1, { autoplay: true });
+      this._startAutoplay();
+    }, this.resumeDelay);
+  },
+
+  _getPosition(index) {
+    const total = this.cards.length;
+    const diff = (index - this.activeIndex + total) % total;
+
+    if (diff === 0) return 'is-active';
+    if (diff === 1) return 'is-next';
+    if (diff === total - 1) return 'is-prev';
+    if (diff === 2) return 'is-after';
+    if (diff === total - 2) return 'is-before';
+    return 'is-hidden';
+  },
+
+  _updateUi() {
+    const positionClasses = ['is-active', 'is-prev', 'is-next', 'is-before', 'is-after', 'is-hidden'];
+
+    this.cards.forEach((card, index) => {
+      const position = this._getPosition(index);
+      const isActive = position === 'is-active';
+
+      card.classList.remove(...positionClasses);
+      card.classList.add(position);
+      card.dataset.position = position.replace('is-', '');
+      card.setAttribute('aria-hidden', String(!isActive));
+    });
+
+    this.dots.forEach((dot, index) => {
+      const isActive = index === this.activeIndex;
+      dot.classList.toggle('is-active', isActive);
+
+      if (isActive) {
+        dot.setAttribute('aria-current', 'true');
+      } else {
+        dot.removeAttribute('aria-current');
+      }
+    });
+
+    this.carousel.dataset.activeIndex = String(this.activeIndex);
+  },
+
+  goTo(index, options = {}) {
+    const { userInitiated = false, autoplay = false } = options;
+    const total = this.cards.length;
+    if (!total) return;
+
+    const normalizedIndex = (index + total) % total;
+    this.activeIndex = normalizedIndex;
+    this._updateUi();
+
+    if (userInitiated) {
+      this._pauseAutoplay();
+      this._scheduleResume();
+      return;
+    }
+
+    if (autoplay) return;
+  }
+};
+
 function updateToggleIcon() {
   const moon = document.getElementById('icon-moon');
   const sun  = document.getElementById('icon-sun');
@@ -637,6 +869,7 @@ document.addEventListener('DOMContentLoaded', () => {
   NavDots.init();
   TimelineSection.init();
   ImpactSection.init();
+  ChallengesSection.init();
   updateToggleIcon();
 
   // Phase 2: Hero
