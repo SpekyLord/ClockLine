@@ -648,6 +648,7 @@ const ChallengesSection = {
   isTouching: false,
   touchStartX: 0,
   touchCurrentX: 0,
+  autoplayAllowed: true,
   hoverQuery: window.matchMedia('(hover: hover)'),
 
   init() {
@@ -668,8 +669,33 @@ const ChallengesSection = {
     this._bindFocus();
     this._bindKeyboard();
     this._bindTouch();
+    this._bindViewport();
+    this.autoplayAllowed = this._isAutoplayAllowed();
     this._updateUi();
     this._startAutoplay();
+  },
+
+  _isAutoplayAllowed() {
+    return !(window.innerWidth <= 900 || window.matchMedia('(pointer: coarse)').matches);
+  },
+
+  _bindViewport() {
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        const nextState = this._isAutoplayAllowed();
+        if (nextState === this.autoplayAllowed) return;
+
+        this.autoplayAllowed = nextState;
+        if (!this.autoplayAllowed) {
+          this._pauseAutoplay();
+          return;
+        }
+
+        this._scheduleResume();
+      }, 180);
+    }, { passive: true });
   },
 
   _bindControls() {
@@ -780,6 +806,7 @@ const ChallengesSection = {
   },
 
   _startAutoplay() {
+    if (!this.autoplayAllowed) return;
     if (this.autoplayTimer || this.isHovering || this.isFocusWithin || this.isTouching) return;
 
     this.autoplayTimer = window.setTimeout(() => {
@@ -790,6 +817,7 @@ const ChallengesSection = {
   },
 
   _scheduleResume() {
+    if (!this.autoplayAllowed) return;
     clearTimeout(this.resumeTimer);
     this.resumeTimer = null;
 
@@ -946,7 +974,7 @@ const FutureSection = {
   _setParallax() {
     if (!this.section) return;
 
-    if (this.reduceMotionQuery.matches) {
+    if (this.reduceMotionQuery.matches || window.innerWidth <= 900) {
       this.section.style.setProperty('--future-layer-1-x', '0px');
       this.section.style.setProperty('--future-layer-1-y', '0px');
       this.section.style.setProperty('--future-layer-2-x', '0px');

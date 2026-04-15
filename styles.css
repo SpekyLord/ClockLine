@@ -46,6 +46,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -96,6 +97,89 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+  isolation: isolate;
+}
+
+section + section {
+  margin-top: 0;
+  padding-top: 4rem;
+}
+
+section + section::before {
+  content: none;
+}
+
+.section-transition {
+  height: 0;
+  margin: 0;
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+.section-transition::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1.15rem;
+  height: clamp(1.8rem, 5vw, 2.8rem);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--seam-from, #0a0a0f) 44%, transparent) 36%,
+    color-mix(in srgb, var(--seam-to, #0a0a0f) 44%, transparent) 68%,
+    transparent 100%
+  );
+  filter: blur(7px);
+  opacity: 0.82;
+}
+
+.section-transition.t-hero-whatis {
+  --seam-from: #0a0a0f;
+  --seam-to: #090c14;
+}
+
+.section-transition.t-whatis-timeline {
+  --seam-from: #090c14;
+  --seam-to: #06131d;
+}
+
+.section-transition.t-timeline-impact {
+  --seam-from: #06131d;
+  --seam-to: #120714;
+}
+
+.section-transition.t-impact-challenges {
+  --seam-from: #120714;
+  --seam-to: #14070f;
+}
+
+.section-transition.t-challenges-future {
+  --seam-from: #14070f;
+  --seam-to: #04101c;
+}
+
+.section-transition.t-future-poll {
+  --seam-from: #070711;
+  --seam-to: #06131f;
+}
+
+.section-transition.t-poll-simulator {
+  --seam-from: #05070d;
+  --seam-to: #1b050f;
+}
+
+.section-transition.t-simulator-credits {
+  --seam-from: #04060a;
+  --seam-to: #061520;
+}
+
+button,
+a,
+[role='button'] {
+  touch-action: manipulation;
 }
 
 /* ── Accessibility ──────────────────────────────────────────── */
@@ -239,6 +323,7 @@ section {
 
 /* ── Section 2: What Is the Information Age? ───────────────── */
 .what-is-section {
+  --section-seam-color: #0a0a0f;
   position: relative;
   overflow: hidden;
   background:
@@ -526,6 +611,7 @@ section {
 
 /* ── Section 3: Timeline ────────────────────────────────────── */
 .timeline-section {
+  --section-seam-color: #1a0618;
   position: relative;
   overflow: hidden;
   background:
@@ -818,6 +904,7 @@ section {
 
 /* ── Section 4: Impact on Quality of Life ───────────────────── */
 .impact-section {
+  --section-seam-color: #071723;
   position: relative;
   overflow: hidden;
   background:
@@ -1045,6 +1132,7 @@ section {
 
 /* —— Section 5: Challenges & Ethical Issues ——————————————— */
 .challenges-section {
+  --section-seam-color: #180914;
   position: relative;
   overflow: hidden;
   background:
@@ -1340,10 +1428,18 @@ section {
     --challenge-shift-near: 1.4rem;
     --challenge-shift-far: 2.35rem;
     min-height: 30rem;
+    overflow: visible;
+    padding: 0.35rem 0;
+  }
+
+  .challenges-stage {
+    min-height: calc(30rem - 0.7rem);
   }
 
   .challenge-card {
-    width: 100%;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    width: calc(100% - 0.5rem);
     padding: 1.2rem;
   }
 
@@ -1371,6 +1467,7 @@ section {
 /* ── Utility: Container ─────────────────────────────────────── */
 /* —— Section 6: The Future ———————————————————————————————— */
 .future-section {
+  --section-seam-color: #14070f;
   --future-layer-1-x: 0px;
   --future-layer-1-y: 0px;
   --future-layer-2-x: 0px;
@@ -1642,6 +1739,7 @@ section {
 
 /* —— Section 7: Live Poll ———————————————————————————————— */
 .poll-section {
+  --section-seam-color: #060f1a;
   position: relative;
   overflow: hidden;
   background:
@@ -1874,6 +1972,7 @@ section {
 
 /* —— Section 8: Internet Disappearance Simulator ——————————— */
 .simulator-section {
+  --section-seam-color: #090713;
   position: relative;
   overflow: hidden;
   transition: background-color 420ms var(--easing);
@@ -2107,6 +2206,7 @@ body.internet-disabled .simulator-section {
 
 /* —— Section 9: Conclusion & Credits ——————————————————————— */
 .credits-section {
+  --section-seam-color: #1a090f;
   position: relative;
   overflow: hidden;
   background:
@@ -2295,6 +2395,174 @@ body.internet-disabled .simulator-section {
   margin-right: auto;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+}
+
+@media (max-width: 1023px) {
+  .timeline-current {
+    position: static;
+    top: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  section {
+    min-height: auto;
+    padding: 3.25rem 1rem;
+    justify-content: flex-start;
+  }
+
+  section + section {
+    margin-top: 0;
+    padding-top: 3.25rem;
+  }
+
+  .section-transition {
+    height: 0;
+  }
+
+  .section-transition::before {
+    top: -0.85rem;
+    height: clamp(1.35rem, 4.8vw, 2rem);
+    filter: blur(5px);
+    opacity: 0.74;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .card {
+    padding: 1.1rem;
+  }
+
+  .network-banner {
+    top: calc(env(safe-area-inset-top, 0px) + 0.5rem);
+    width: min(94vw, 42rem);
+    font-size: 0.82rem;
+  }
+
+  #theme-toggle {
+    top: calc(env(safe-area-inset-top, 0px) + 0.7rem);
+    right: calc(env(safe-area-inset-right, 0px) + 0.7rem);
+    width: 42px;
+    height: 42px;
+  }
+
+  #hero {
+    min-height: 100svh;
+    padding: 1.25rem 1rem;
+  }
+
+  .hero-content {
+    gap: 1rem;
+  }
+
+  .hero-members {
+    font-size: 0.8rem;
+    gap: 0.4rem;
+  }
+
+  .scroll-arrow {
+    bottom: 1.15rem;
+  }
+
+  .timeline-track {
+    padding-left: 1.05rem;
+  }
+
+  .timeline-track::before {
+    left: 0.35rem;
+  }
+
+  .timeline-era {
+    scroll-margin-top: 5rem;
+    padding: 1.05rem 0.9rem 0.9rem 1.15rem;
+  }
+
+  .timeline-era::before {
+    left: -0.18rem;
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+
+  .impact-card,
+  .impact-card-toggle,
+  .impact-card-scene {
+    min-height: 24rem;
+  }
+
+  .impact-card-face {
+    gap: 1rem;
+    padding: 1.05rem;
+    overflow-y: auto;
+  }
+
+  .challenges-stage-shell {
+    min-height: 32rem;
+  }
+
+  .challenge-card-copy h3 {
+    font-size: clamp(1.45rem, 6.6vw, 2rem);
+  }
+
+  .future-layer-grid {
+    opacity: 0.18;
+  }
+
+  .future-card-toggle,
+  .timeline-card-toggle,
+  .poll-option,
+  .simulator-trigger,
+  .btn-primary,
+  .btn-secondary,
+  .challenges-nav {
+    min-height: 44px;
+  }
+
+  .poll-result-track {
+    height: 0.72rem;
+  }
+
+  .poll-qr-link {
+    overflow-wrap: anywhere;
+  }
+
+  .simulator-reflection-card {
+    width: min(94vw, 40rem);
+    padding: 1.1rem 1rem;
+  }
+
+  .simulator-reflection-card p {
+    font-size: 0.98rem;
+  }
+
+  .credits-meta span {
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-title {
+    font-size: clamp(1.75rem, 10vw, 2.35rem);
+  }
+
+  .timeline-card-toggle,
+  .future-card-toggle {
+    padding: 0.95rem 0.95rem 0.85rem;
+  }
+
+  .challenge-card {
+    padding: 1rem;
+  }
+
+  .poll-vote-card h3,
+  .poll-results-card h3,
+  .conclusion-card h3,
+  .credits-card h3 {
+    font-size: 1.22rem;
+  }
 }
 
 /* ── Utility: Card ──────────────────────────────────────────── */
