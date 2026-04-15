@@ -1398,6 +1398,7 @@ const InternetSimulator = {
   terminalBody: null,
   popupZone: null,
   countdownEl: null,
+  upcountEl: null,
   reflectionText: null,
   overlayRestoreBtn: null,
   disconnectAudio: null,
@@ -1408,11 +1409,12 @@ const InternetSimulator = {
   timers: [],
   popupInterval: null,
   countdownInterval: null,
+  upcountInterval: null,
   countdownSec: 8,
 
   // Terminal lines that print during the simulation
   terminalLines: [
-    { delay: 200,  cls: 'dim', text: '$ ping google.com' },
+    { delay: 200,  cls: 'dim',  text: '$ ping google.com' },
     { delay: 700,  cls: 'warn', text: 'Request timeout for icmp_seq 0' },
     { delay: 1100, cls: 'warn', text: 'Request timeout for icmp_seq 1' },
     { delay: 1500, cls: 'err',  text: '--- google.com ping statistics ---' },
@@ -1436,27 +1438,32 @@ const InternetSimulator = {
     { delay: 7000, cls: 'dim',  text: 'Estimated 2.2 billion people experience this daily.' },
   ],
 
-  // Popup messages — contained inside the overlay popup zone
+  // Popup messages — varied apps including PH-relevant ones
   errorMessages: [
-    { title: 'Google Chrome', body: 'ERR_INTERNET_DISCONNECTED' },
-    { title: 'Network Error', body: 'Cannot reach server — check your connection' },
-    { title: 'DNS Failure',   body: 'DNS_PROBE_FINISHED_NO_INTERNET' },
-    { title: 'App Error',     body: 'Facebook — No network connection' },
-    { title: 'Mail Failed',   body: 'Gmail — Unable to sync. Reconnecting...' },
-    { title: 'Maps Offline',  body: 'Google Maps — Enable internet to load routes' },
+    { title: 'Google Chrome',   body: 'ERR_INTERNET_DISCONNECTED' },
+    { title: 'Network Error',   body: 'DNS_PROBE_FINISHED_NO_INTERNET' },
+    { title: 'Facebook',        body: 'No internet connection. Tap to retry.' },
+    { title: 'Gmail',           body: 'Unable to sync — check your connection' },
+    { title: 'Google Maps',     body: 'You\'re offline. Map may be incomplete.' },
+    { title: 'GCash',           body: 'Transaction failed — no internet connection' },
+    { title: 'BDO Online',      body: 'Cannot connect to server. Please try again.' },
+    { title: 'Messenger',       body: 'Couldn\'t send message — you\'re offline' },
+    { title: 'Spotify',         body: 'No connection. Offline songs only.' },
+    { title: 'WhatsApp',        body: 'Waiting for network…' },
   ],
 
   init() {
-    this.disableBtn      = document.getElementById('sim-disable-btn');
-    this.statusEl        = document.querySelector('[data-sim-status]');
-    this.overlay         = document.getElementById('sim-overlay');
-    this.terminalBody    = document.getElementById('sim-terminal-body');
-    this.popupZone       = document.getElementById('sim-popup-zone');
-    this.countdownEl     = document.getElementById('sim-countdown');
-    this.reflectionText  = document.getElementById('sim-reflection-text');
+    this.disableBtn        = document.getElementById('sim-disable-btn');
+    this.statusEl          = document.querySelector('[data-sim-status]');
+    this.overlay           = document.getElementById('sim-overlay');
+    this.terminalBody      = document.getElementById('sim-terminal-body');
+    this.popupZone         = document.getElementById('sim-popup-zone');
+    this.countdownEl       = document.getElementById('sim-countdown');
+    this.upcountEl         = document.getElementById('sim-upcount');
+    this.reflectionText    = document.getElementById('sim-reflection-text');
     this.overlayRestoreBtn = document.getElementById('sim-overlay-restore');
-    this.disconnectAudio = document.getElementById('sim-audio-disconnect');
-    this.restoreAudio    = document.getElementById('sim-audio-restore');
+    this.disconnectAudio   = document.getElementById('sim-audio-disconnect');
+    this.restoreAudio      = document.getElementById('sim-audio-restore');
 
     if (this.disableBtn) {
       this.disableBtn.addEventListener('click', () => this.disconnect());
@@ -1479,14 +1486,12 @@ const InternetSimulator = {
     this._setStatus('Internet status: Disconnected');
     this._playSound(this.disconnectAudio);
 
-    // Show overlay
+    // Show overlay with flicker
     this._showOverlay();
 
     // Print terminal lines on their scheduled delays
     this.terminalLines.forEach(({ delay, cls, text }) => {
-      const t = window.setTimeout(() => {
-        this._printLine(cls, text);
-      }, delay);
+      const t = window.setTimeout(() => this._printLine(cls, text), delay);
       this.timers.push(t);
     });
 
@@ -1494,12 +1499,14 @@ const InternetSimulator = {
     const popupStart = window.setTimeout(() => this._startPopupStream(), 2500);
     this.timers.push(popupStart);
 
-    // Start countdown
+    // Start countdown + upcount
     this._startCountdown();
+    this._startUpcount();
 
-    // After 8s: show reflection + restore button
+    // After 8s: show reflection one stat at a time, then restore button
     const endTimer = window.setTimeout(() => {
       this._stopPopupStream();
+      this._stopCountdown();
       this._showReflection();
     }, 8000);
     this.timers.push(endTimer);
@@ -1524,13 +1531,19 @@ const InternetSimulator = {
   _showOverlay() {
     if (!this.overlay) return;
     this.overlay.hidden = false;
-    // Reset state
-    if (this.terminalBody) this.terminalBody.innerHTML = '';
-    if (this.reflectionText) this.reflectionText.hidden = true;
+    if (this.terminalBody)     this.terminalBody.innerHTML = '';
+    if (this.reflectionText)   this.reflectionText.hidden = true;
     if (this.overlayRestoreBtn) this.overlayRestoreBtn.hidden = true;
-    if (this.popupZone) this.popupZone.innerHTML = '';
+    if (this.popupZone)        this.popupZone.innerHTML = '';
+    if (this.upcountEl)        this.upcountEl.textContent = '';
+
+    // Flicker effect on appear
     requestAnimationFrame(() => {
-      // opacity transition handled by CSS :not([hidden])
+      this.overlay.classList.add('is-flickering');
+      const removeFlicker = window.setTimeout(() => {
+        if (this.overlay) this.overlay.classList.remove('is-flickering');
+      }, 700);
+      this.timers.push(removeFlicker);
     });
   },
 
@@ -1541,22 +1554,36 @@ const InternetSimulator = {
       if (this.overlay) {
         this.overlay.hidden = true;
         this.overlay.style.opacity = '';
-        if (this.terminalBody) this.terminalBody.innerHTML = '';
-        if (this.reflectionText) this.reflectionText.hidden = true;
+        if (this.terminalBody)     this.terminalBody.innerHTML = '';
+        if (this.reflectionText)   this.reflectionText.hidden = true;
         if (this.overlayRestoreBtn) this.overlayRestoreBtn.hidden = true;
-        if (this.popupZone) this.popupZone.innerHTML = '';
-        if (this.countdownEl) this.countdownEl.textContent = '';
+        if (this.popupZone)        this.popupZone.innerHTML = '';
+        if (this.countdownEl)      this.countdownEl.textContent = '';
+        if (this.upcountEl)        this.upcountEl.textContent = '';
       }
     }, 420);
     this.timers.push(t);
   },
 
-  // ── Terminal ─────────────────────────────────────────────────
+  // ── Terminal (with blinking cursor on last line) ──────────────
   _printLine(cls, text) {
     if (!this.terminalBody) return;
+
+    // Remove cursor from previous last line
+    const prevCursor = this.terminalBody.querySelector('.sim-terminal-cursor');
+    if (prevCursor) prevCursor.remove();
+
     const span = document.createElement('span');
     span.className = `sim-terminal-line ${cls}`;
     span.textContent = text || '\u00a0';
+
+    // Add blinking cursor to non-empty lines
+    if (text) {
+      const cursor = document.createElement('span');
+      cursor.className = 'sim-terminal-cursor';
+      span.appendChild(cursor);
+    }
+
     this.terminalBody.appendChild(span);
     this.terminalBody.scrollTop = this.terminalBody.scrollHeight;
   },
@@ -1582,9 +1609,23 @@ const InternetSimulator = {
 
   _setCountdown(sec) {
     if (!this.countdownEl) return;
-    this.countdownEl.textContent = sec > 0
-      ? `Restore available in ${sec}s`
-      : '';
+    this.countdownEl.textContent = sec > 0 ? `Restore available in ${sec}s` : '';
+  },
+
+  // ── Upcount — "offline for Xs" ───────────────────────────────
+  _startUpcount() {
+    let elapsed = 0;
+    this.upcountInterval = window.setInterval(() => {
+      elapsed++;
+      if (this.upcountEl) this.upcountEl.textContent = `Offline for ${elapsed}s`;
+    }, 1000);
+  },
+
+  _stopUpcount() {
+    if (this.upcountInterval) {
+      window.clearInterval(this.upcountInterval);
+      this.upcountInterval = null;
+    }
   },
 
   // ── Error Popups (inside overlay popup zone) ─────────────────
@@ -1607,11 +1648,8 @@ const InternetSimulator = {
     const msg = this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
     const popup = document.createElement('div');
     popup.className = 'sim-err-popup';
-
-    // Position randomly within the zone
     popup.style.top  = `${Math.random() * 55}%`;
     popup.style.left = `${Math.random() * 30}%`;
-
     popup.innerHTML = `
       <div class="sim-err-popup-bar">${msg.title}</div>
       <div class="sim-err-popup-body">${msg.body}</div>
@@ -1623,11 +1661,28 @@ const InternetSimulator = {
     this.timers.push(leaveT, removeT);
   },
 
-  // ── Reflection ───────────────────────────────────────────────
+  // ── Reflection — stats reveal one by one ─────────────────────
   _showReflection() {
-    if (this.reflectionText)  this.reflectionText.hidden = false;
-    if (this.overlayRestoreBtn) this.overlayRestoreBtn.hidden = false;
-    if (this.overlayRestoreBtn) this.overlayRestoreBtn.focus();
+    if (!this.reflectionText) return;
+    this.reflectionText.hidden = false;
+
+    const stats = this.reflectionText.querySelectorAll('.sim-stat');
+    stats.forEach((el, i) => {
+      const t = window.setTimeout(() => {
+        el.hidden = false;
+      }, i * 700);
+      this.timers.push(t);
+    });
+
+    // Show restore button after all stats
+    const btnDelay = stats.length * 700 + 300;
+    const btnTimer = window.setTimeout(() => {
+      if (this.overlayRestoreBtn) {
+        this.overlayRestoreBtn.hidden = false;
+        this.overlayRestoreBtn.focus();
+      }
+    }, btnDelay);
+    this.timers.push(btnTimer);
   },
 
   // ── Helpers ──────────────────────────────────────────────────
@@ -1636,6 +1691,7 @@ const InternetSimulator = {
     this.timers = [];
     this._stopPopupStream();
     this._stopCountdown();
+    this._stopUpcount();
   },
 
   _setStatus(msg) {
