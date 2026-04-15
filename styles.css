@@ -1,0 +1,101 @@
+/* =============================================================
+   The Information Age — Design System
+   NSCI 110 Creative Presentation | BSCS 1-B Group 6
+   ============================================================= */
+
+/* ── Design Tokens ──────────────────────────────────────────── */
+:root {
+  /* Colors (Dark Mode — Default) */
+  --color-bg:             #0a0a0f;
+  --color-surface:        #1a1a2e;
+  --color-primary:        #00d4ff;
+  --color-accent:         #ff006e;
+  --color-success:        #00ff88;
+  --color-text-primary:   #ffffff;
+  --color-text-secondary: #a0a0b8;
+
+  /* Typography */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* Animation */
+  --duration-default: 300ms;
+  --duration-reveal:  600ms;
+  --duration-hover:   200ms;
+  --easing:           cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Light Mode Overrides ───────────────────────────────────── */
+.light {
+  --color-bg:             #f0f4f8;
+  --color-surface:        #ffffff;
+  --color-text-primary:   #0a0a0f;
+  --color-text-secondary: #4a4a6a;
+}
+
+/* ── Base Reset & Defaults ──────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  overflow-x: hidden;
+  line-height: 1.6;
+  transition:
+    background-color var(--duration-default) var(--easing),
+    color           var(--duration-default) var(--easing);
+}
+
+/* ── Typography ─────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+code,
+pre,
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* ── Sections ───────────────────────────────────────────────── */
+section {
+  min-height: 100vh;
+  padding: 4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ── Accessibility ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Focus Styles ───────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 2px;
+}

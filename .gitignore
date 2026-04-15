@@ -1,0 +1,34 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Node (future-proofing)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Build artifacts
+dist/
+.cache/
+.parcel-cache/
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# Screenshots / recordings (stored in backups folder or Drive)
+screenshots/
+*.mp4
