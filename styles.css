@@ -514,6 +514,298 @@ section {
   }
 }
 
+/* ── Section 3: Timeline ────────────────────────────────────── */
+.timeline-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 34%),
+    radial-gradient(circle at 20% 80%, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 36%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 88%, #06131d), var(--color-bg));
+}
+
+.timeline-layout {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.timeline-heading {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 780px;
+}
+
+.timeline-heading h2 {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  max-width: 10ch;
+}
+
+.timeline-intro {
+  color: var(--color-text-secondary);
+  max-width: 60ch;
+}
+
+.timeline-current {
+  position: sticky;
+  top: 4.75rem;
+  z-index: 20;
+  display: grid;
+  gap: 0.35rem;
+  width: min(100%, 340px);
+  background-color: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.timeline-current-name {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.timeline-current-range {
+  color: var(--color-text-secondary);
+}
+
+.timeline-track {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  padding-left: 1.35rem;
+}
+
+.timeline-track::before {
+  content: "";
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 0.45rem;
+  width: 1px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 72%, transparent), color-mix(in srgb, var(--color-accent) 55%, transparent));
+  opacity: 0.65;
+}
+
+.timeline-era {
+  position: relative;
+  padding: 1.25rem 1rem 1rem 1.4rem;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 14%, transparent);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 8%, transparent), transparent 40%),
+    color-mix(in srgb, var(--color-surface) 94%, transparent);
+  scroll-margin-top: 7rem;
+}
+
+.timeline-era::before {
+  content: "";
+  position: absolute;
+  top: 1.45rem;
+  left: -0.1rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 999px;
+  background-color: var(--color-bg);
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.timeline-era-header {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.timeline-era-range {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.timeline-era h3 {
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+}
+
+.timeline-era-summary {
+  color: var(--color-text-secondary);
+  max-width: 42ch;
+}
+
+.timeline-card-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.timeline-card {
+  padding: 0;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  transform-origin: center;
+  transition:
+    transform var(--duration-hover) var(--easing),
+    box-shadow var(--duration-hover) var(--easing),
+    border-color var(--duration-hover) var(--easing);
+}
+
+.timeline-card.is-open {
+  border-color: color-mix(in srgb, var(--color-primary) 42%, transparent);
+  box-shadow: 0 0 26px color-mix(in srgb, var(--color-primary) 16%, transparent);
+}
+
+.timeline-card-toggle {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  padding: 1.15rem 1.15rem 0.95rem;
+  display: grid;
+  gap: 0.95rem;
+  cursor: pointer;
+}
+
+.timeline-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.timeline-card-year {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  color: var(--color-primary);
+}
+
+.timeline-card-icon {
+  width: 2.6rem;
+  height: 2.6rem;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.85rem;
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-bg) 38%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.timeline-card-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.timeline-card-copy {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.timeline-card-copy h4 {
+  font-size: 1.12rem;
+}
+
+.timeline-card-copy p {
+  color: var(--color-text-secondary);
+  max-width: 32ch;
+}
+
+.timeline-card-chevron {
+  justify-self: end;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--color-primary);
+  transition: transform var(--duration-hover) var(--easing);
+}
+
+.timeline-card.is-open .timeline-card-chevron {
+  transform: rotate(45deg);
+}
+
+.timeline-card-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--duration-default) var(--easing);
+}
+
+.timeline-card-panel-inner {
+  display: grid;
+  gap: 0.85rem;
+  padding: 0 1.15rem 1.15rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.timeline-card-panel-inner > p:first-child {
+  padding-top: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.timeline-card-fact {
+  color: var(--color-text-primary);
+}
+
+.timeline-card-fact span {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+@media (hover: hover) {
+  .timeline-card:hover {
+    transform: translateY(-3px) scale(1.01);
+    border-color: color-mix(in srgb, var(--color-primary) 32%, transparent);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--color-primary) 14%, transparent);
+  }
+
+  .timeline-card:hover .timeline-card-icon {
+    box-shadow: 0 0 22px color-mix(in srgb, var(--color-primary) 18%, transparent);
+  }
+}
+
+@media (min-width: 768px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+
+  .timeline-layout {
+    gap: 1.75rem;
+  }
+
+  .timeline-current {
+    top: 5rem;
+  }
+
+  .timeline-era {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+    padding: 1.35rem 1.2rem 1.2rem 1.6rem;
+  }
+
+  .timeline-era-header {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    align-items: end;
+  }
+
+  .timeline-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* ── Utility: Container ─────────────────────────────────────── */
 .container {
   max-width: 1280px;
@@ -621,6 +913,7 @@ section {
   transition:
     opacity   var(--duration-reveal) var(--easing),
     transform var(--duration-reveal) var(--easing);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
 /* ── Scroll Progress Bar ────────────────────────────────────── */

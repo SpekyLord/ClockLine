@@ -227,7 +227,6 @@
             </section>
           </div>
         </article>
-      </div>
 
       <figure class="quote-card reveal">
         <blockquote>
@@ -250,9 +249,578 @@
   <!-- ============================================================
        SECTION 3: TIMELINE
        ============================================================ -->
-  <!-- TODO: Implement in Phase 4 -->
-  <section id="timeline" aria-label="Interactive technology timeline">
-    <p><!-- Phase 4: Timeline section goes here --></p>
+  <section id="timeline" class="timeline-section" aria-labelledby="timeline-title">
+    <div class="container timeline-layout">
+      <div class="timeline-heading">
+        <p class="section-label reveal">The Core Timeline</p>
+        <h2 id="timeline-title" class="reveal">From telegraph wires to AI agents</h2>
+        <p class="timeline-intro reveal">
+          This vertical timeline follows the milestones that turned information into the fastest-moving force in modern life.
+        </p>
+      </div>
+
+      <aside class="card timeline-current reveal" aria-label="Current timeline era">
+        <p class="section-label">Current Era</p>
+        <p class="timeline-current-name" data-current-era-name>Pre-Digital Era</p>
+        <p class="timeline-current-range" data-current-era-range>1800s-1940s</p>
+      </aside>
+
+      <!-- TODO: Replace Phase 4 timeline placeholder copy with researcher-provided details. -->
+      <div class="timeline-track" aria-label="Technology eras of the Information Age">
+        <article class="timeline-era" data-era data-era-name="Pre-Digital Era" data-era-range="1800s-1940s">
+          <div class="timeline-era-header">
+            <div>
+              <p class="timeline-era-range">1800s-1940s</p>
+              <h3>Pre-Digital Era</h3>
+            </div>
+            <p class="timeline-era-summary">Signals start outrunning physical delivery.</p>
+          </div>
+
+          <div class="timeline-card-grid">
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 0ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="pre-digital-telegraph-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1837</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M4 18h16M6 18V9l6-4 6 4v9M9 13h.01M12 13h.01M15 13h.01M12 9v4"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Telegraph</h4>
+                  <p>Messages outran horses and ships for the first time.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="pre-digital-telegraph-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: Telegraph networks turned coded electrical signals into long-distance communication.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Morse code operators became early specialists in real-time messaging.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 100ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="pre-digital-telephone-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1876</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M7 5h10l2 5-3 2a11 11 0 0 1-6-6l2-3 5 2zM14 4c2.5.5 4 2 4.5 4.5M14 8c1.4.3 2.2 1.1 2.5 2.5"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Telephone</h4>
+                  <p>Voices could travel live instead of waiting for print.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="pre-digital-telephone-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: The telephone made person-to-person communication immediate across cities and countries.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Early switchboard operators manually connected calls before automation.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 200ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="pre-digital-radio-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1895</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M12 7v4m-4 7a4 4 0 1 1 8 0m-12 0a8 8 0 1 1 16 0M11 18h2m-6 2h10"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Radio</h4>
+                  <p>Information jumped through the air without wires.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="pre-digital-radio-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: Radio broadcasting let one signal reach many listeners at the same moment.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Radio turned news and entertainment into shared live experiences.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 300ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="pre-digital-television-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1927</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M4 7h16v10H4zM9 21l3-4 3 4M10 4l2 3 2-3"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Television</h4>
+                  <p>Images and sound reached homes together in one device.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="pre-digital-television-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: Television combined motion, sound, and mass reach into a powerful storytelling medium.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> TV quickly became a household center for news, sports, and culture.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </article>
+        <article class="timeline-era" data-era data-era-name="Computer Age" data-era-range="1940s-1970s">
+          <div class="timeline-era-header">
+            <div>
+              <p class="timeline-era-range">1940s-1970s</p>
+              <h3>Computer Age</h3>
+            </div>
+            <p class="timeline-era-summary">Computers move from machines to connected systems.</p>
+          </div>
+
+          <div class="timeline-card-grid">
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 0ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="computer-age-eniac-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1945</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M5 6h14v12H5zM8 9h8M8 12h8M8 15h5M3 9h2m14 0h2M3 12h2m14 0h2M3 15h2m14 0h2"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>ENIAC</h4>
+                  <p>Electronic computation sped up complex problem-solving.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="computer-age-eniac-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: ENIAC showed that electronic computers could outpace manual calculation by a huge margin.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> ENIAC filled a room and relied on thousands of vacuum tubes.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 100ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="computer-age-transistor-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1947</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M6 6v12m12-12v12M6 12h12M9 9l-3-3M15 9l3-3M9 15l-3 3M15 15l3 3"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Transistor</h4>
+                  <p>Smaller electronics made computing practical to scale.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="computer-age-transistor-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: The transistor replaced bulkier vacuum tubes and made electronics more reliable and compact.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Tiny transistors became the foundation for chips, laptops, and phones.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 200ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="computer-age-arpanet-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1969</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M5 6h4v4H5zM15 6h4v4h-4zM10 14h4v4h-4zM9 8h6M7 10l4 4m2 0 4-4"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>ARPANET</h4>
+                  <p>Computers began sharing data across a network.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="computer-age-arpanet-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: ARPANET linked distant computers and proved that packet-switched networking could work.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Its first message crashed after just two letters: “LO”.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 300ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="computer-age-unix-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1969</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M4 6h16v12H4zM7 9h10M7 12h6m-4 3 2-3-2-3"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>UNIX</h4>
+                  <p>A shared operating system philosophy spread through computing.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="computer-age-unix-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: UNIX shaped later servers, developer tools, and operating systems with a flexible design philosophy.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Linux and macOS still carry major UNIX ideas forward.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </article>
+
+        <article class="timeline-era" data-era data-era-name="Personal Computing" data-era-range="1970s-1990s">
+          <div class="timeline-era-header">
+            <div>
+              <p class="timeline-era-range">1970s-1990s</p>
+              <h3>Personal Computing</h3>
+            </div>
+            <p class="timeline-era-summary">Computers shrink from institutions to desks and homes.</p>
+          </div>
+
+          <div class="timeline-card-grid">
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 0ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="personal-computing-apple-i-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1976</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M4 6h16v10H4zM8 20h8M7 10h10M8 14h6"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Apple I</h4>
+                  <p>Computers started looking like personal tools.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="personal-computing-apple-i-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: The Apple I helped signal that computing could move from labs into personal ownership.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Buyers often had to add their own case, keyboard, and display.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 100ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="personal-computing-ibm-pc-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1981</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M4 5h16v10H4zM8 19h8M10 15v4m4-4v4M8 9h8"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>IBM PC</h4>
+                  <p>A standard platform pushed PCs into offices worldwide.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="personal-computing-ibm-pc-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: The IBM PC helped standardize personal computing for business, school, and home use.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Compatible clones quickly multiplied and expanded the PC market.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 200ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="personal-computing-windows-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1985</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M4 5l7-1v7H4V5zm8-.6L20 3v8h-8V4.4zM4 13h7v8l-7-1v-7zm9 0h7v7l-7 1v-8z"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Windows</h4>
+                  <p>Graphical interfaces made computers easier to navigate.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="personal-computing-windows-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: Windows popularized point-and-click software for users beyond command-line specialists.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Familiar GUI patterns like windows and icons became everyday norms here.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 300ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="personal-computing-www-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1989</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0-18zm-4 9h8m-8-4h8m-8 8h8m-4-12c2 2.2 3 5 3 8s-1 5.8-3 8m0-16c-2 2.2-3 5-3 8s1 5.8 3 8"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>World Wide Web</h4>
+                  <p>Linked pages made the internet usable for ordinary people.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="personal-computing-www-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: The Web turned networked information into pages people could browse and link together.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Hyperlinks are one of the simplest ideas behind the Web’s huge impact.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </article>
+
+        <article class="timeline-era" data-era data-era-name="Internet Boom" data-era-range="1990s-2000s">
+          <div class="timeline-era-header">
+            <div>
+              <p class="timeline-era-range">1990s-2000s</p>
+              <h3>Internet Boom</h3>
+            </div>
+            <p class="timeline-era-summary">Web platforms turn the network into daily habit.</p>
+          </div>
+
+          <div class="timeline-card-grid">
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 0ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="internet-boom-mosaic-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1993</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M4 5h16v14H4zM7 8h10M7 12h4m2 0h4M7 16h10"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Mosaic</h4>
+                  <p>Browsing became visual and easier for new users.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="internet-boom-mosaic-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: Mosaic helped early web navigation feel more approachable with a friendlier browser window.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Browsers were the bridge that brought the internet to regular users.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 100ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="internet-boom-google-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">1998</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M11 5a6 6 0 1 0 0 12a6 6 0 0 0 0-12zm8 14 3 3"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Google</h4>
+                  <p>Search turned the web into a findable knowledge space.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="internet-boom-google-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: Google organized a rapidly growing web so useful pages could be found quickly.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Link-based ranking made search results feel dramatically more relevant.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 200ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="internet-boom-wikipedia-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">2001</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M6 4h9l3 3v13H6zM9 4v5h6"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Wikipedia</h4>
+                  <p>Reference knowledge became editable and global.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="internet-boom-wikipedia-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: Wikipedia showed that large communities could maintain a living encyclopedia online.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Volunteers update articles constantly, keeping it unusually current for a reference site.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 300ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="internet-boom-facebook-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">2004</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M12 4a8 8 0 1 0 0 16a8 8 0 0 0 0-16zm2 5h-1.5A1.5 1.5 0 0 0 11 10.5V12H9v2h2v5h2.5v-5H16l.5-2h-3V11a.5.5 0 0 1 .5-.5H16V8h-2z"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Facebook</h4>
+                  <p>Online identity and sharing became part of daily life.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="internet-boom-facebook-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: Facebook accelerated social networking as a mainstream way to post, react, and connect.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Social feeds changed how many people discovered news and events.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </article>
+
+        <article class="timeline-era" data-era data-era-name="Mobile + Social Era" data-era-range="2000s-2010s">
+          <div class="timeline-era-header">
+            <div>
+              <p class="timeline-era-range">2000s-2010s</p>
+              <h3>Mobile + Social Era</h3>
+            </div>
+            <p class="timeline-era-summary">The internet becomes personal, portable, and constant.</p>
+          </div>
+
+          <div class="timeline-card-grid">
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 0ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="mobile-social-iphone-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">2007</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm4 15h.01"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>iPhone</h4>
+                  <p>A computer, camera, and internet device fit in one hand.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="mobile-social-iphone-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: The iPhone reset expectations for touch interfaces and always-connected mobile apps.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Smartphones turned spare moments almost anywhere into online moments.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 100ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="mobile-social-android-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">2008</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M8 9h8v7H8zM10 5l-1-2m6 2 1-2M9 7H8m8 0h-1M10 16v2m4-2v2"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Android</h4>
+                  <p>Smartphones spread across more price points and brands.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="mobile-social-android-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: Android expanded mobile computing through a broad hardware ecosystem and app marketplace.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Its scale helped smartphones reach users far beyond flagship devices.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 200ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="mobile-social-instagram-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">2010</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm5 4a3 3 0 1 0 0 6a3 3 0 0 0 0-6zm4-1h.01"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Instagram</h4>
+                  <p>Photos became instant social communication.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="mobile-social-instagram-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: Instagram made visual posting, creator culture, and mobile identity feel immediate.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> The square feed helped define a whole era of mobile-first design.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 300ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="mobile-social-tiktok-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">2016</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M14 5v8.2a3 3 0 1 1-2-2.8V7.5c1.4 1.2 3.1 1.8 5 1.8V12c-1.8 0-3.5-.6-5-1.6V16a4 4 0 1 1-2-3.9"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>TikTok</h4>
+                  <p>Short-form video accelerated algorithm-driven culture.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="mobile-social-tiktok-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: TikTok pushed fast, vertical, highly personalized video into the center of social media.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Recommendation systems became the main editor of what many users watched next.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </article>
+
+        <article class="timeline-era" data-era data-era-name="AI + Cloud Era" data-era-range="2010s-present">
+          <div class="timeline-era-header">
+            <div>
+              <p class="timeline-era-range">2010s-present</p>
+              <h3>AI + Cloud Era</h3>
+            </div>
+            <p class="timeline-era-summary">Computation scales in the cloud while AI becomes mainstream.</p>
+          </div>
+
+          <div class="timeline-card-grid">
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 0ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="ai-cloud-alphago-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">2016</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M5 5h14v14H5zM9.5 9.5h.01m5 0h.01m-5 5h.01m5 0h.01m-2.5-2.5h.01"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>AlphaGo</h4>
+                  <p>AI beat a champion in a game once seen as deeply human.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="ai-cloud-alphago-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: AlphaGo showed machine learning could master complex strategy with surprising results.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Its match against Lee Sedol became a global AI wake-up call.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 100ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="ai-cloud-gpt3-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">2020</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M6 8a3 3 0 1 1 5.5-1.5A4 4 0 1 1 18 15H8a3 3 0 0 1-2-7zm2 3h8m-8 3h5"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>GPT-3</h4>
+                  <p>Generative AI started producing fluent language at scale.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="ai-cloud-gpt3-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: GPT-3 made text generation broad enough to feel useful across many demos and tasks.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> Prompting became a new everyday skill for steering AI output.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 200ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="ai-cloud-chatgpt-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">2022</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M5 6h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-6l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm3 5h8m-8 3h5"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>ChatGPT</h4>
+                  <p>Conversational AI reached mainstream users almost overnight.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="ai-cloud-chatgpt-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: ChatGPT packaged large language models into a chat format people could use immediately.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> It became one of the fastest-adopted consumer software launches ever.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card timeline-card reveal" data-tech-card style="--reveal-delay: 300ms;">
+              <button class="timeline-card-toggle" type="button" data-card-toggle aria-expanded="false" aria-controls="ai-cloud-claude-agents-panel">
+                <div class="timeline-card-meta">
+                  <span class="timeline-card-year">2024+</span>
+                  <span class="timeline-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="presentation"><path d="M5 7h5v5H5zM14 7h5v5h-5zM9 16h6v3H9zM10 9h4m-2 3v4m-5 2 3-3m4 0 3 3"/></svg></span>
+                </div>
+                <div class="timeline-card-copy">
+                  <h4>Claude / AI Agents</h4>
+                  <p>AI tools began coordinating tasks instead of answering once.</p>
+                </div>
+                <span class="timeline-card-chevron" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-card-panel" data-card-panel id="ai-cloud-claude-agents-panel" aria-hidden="true">
+                <div class="timeline-card-panel-inner">
+                  <p>Placeholder summary: Agentic AI points toward systems that plan, use tools, and complete multi-step work.</p>
+                  <p class="timeline-card-fact"><span>Did you know?</span> The shift is not only better answers, but software that can take actions too.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </article>
+      </div>
+
+      </div>
+    </div>
   </section>
 
   <!-- ============================================================

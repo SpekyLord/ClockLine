@@ -340,6 +340,178 @@ const NavDots = {
 };
 
 // ── Theme Toggle Button ──────────────────────────────────────
+const TimelineSection = {
+  section: null,
+  eras: [],
+  hudName: null,
+  hudRange: null,
+  eraObserver: null,
+
+  init() {
+    this.section = document.getElementById('timeline');
+    if (!this.section) return;
+
+    this.eras = Array.from(this.section.querySelectorAll('[data-era]'));
+    this.hudName = this.section.querySelector('[data-current-era-name]');
+    this.hudRange = this.section.querySelector('[data-current-era-range]');
+
+    if (!this.eras.length) return;
+
+    this._bindCards();
+    this._bindEraObserver();
+    this._bindResize();
+    this._updateHud(this.eras[0]);
+  },
+
+  _getCardParts(card) {
+    return {
+      toggle: card.querySelector('[data-card-toggle]'),
+      panel: card.querySelector('[data-card-panel]')
+    };
+  },
+
+  _bindCards() {
+    this.eras.forEach((era) => {
+      const cards = Array.from(era.querySelectorAll('[data-tech-card]'));
+
+      cards.forEach((card) => {
+        const { toggle, panel } = this._getCardParts(card);
+        if (!toggle || !panel) return;
+
+        panel.style.maxHeight = '0px';
+
+        toggle.addEventListener('click', () => {
+          this.toggleCard(card);
+        });
+
+        panel.addEventListener('transitionend', (event) => {
+          if (event.propertyName !== 'max-height') return;
+          if (card.classList.contains('is-open')) {
+            panel.style.maxHeight = 'none';
+          }
+        });
+      });
+
+      era.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+
+        const openCard = era.querySelector('[data-tech-card].is-open');
+        if (!openCard) return;
+
+        this.closeCard(openCard);
+        const toggle = openCard.querySelector('[data-card-toggle]');
+        if (toggle) toggle.focus();
+      });
+    });
+  },
+
+  _bindEraObserver() {
+    if (!('IntersectionObserver' in window)) return;
+
+    const ratios = new Map();
+    this.eraObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          ratios.set(entry.target, entry.isIntersecting ? entry.intersectionRatio : 0);
+        });
+
+        const bestMatch = Array.from(ratios.entries())
+          .filter(([, ratio]) => ratio > 0)
+          .sort((a, b) => b[1] - a[1])[0]?.[0];
+
+        if (bestMatch) {
+          this._updateHud(bestMatch);
+        }
+      },
+      {
+        threshold: [0, 0.2, 0.35, 0.5, 0.75],
+        rootMargin: '-18% 0px -48% 0px'
+      }
+    );
+
+    this.eras.forEach((era) => {
+      ratios.set(era, 0);
+      this.eraObserver.observe(era);
+    });
+  },
+
+  _bindResize() {
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        this.eras.forEach((era) => {
+          era.querySelectorAll('[data-tech-card].is-open').forEach((card) => {
+            const { panel } = this._getCardParts(card);
+            if (panel) {
+              panel.style.maxHeight = 'none';
+            }
+          });
+        });
+      }, 150);
+    }, { passive: true });
+  },
+
+  _updateHud(era) {
+    if (this.hudName) {
+      this.hudName.textContent = era.dataset.eraName || '';
+    }
+    if (this.hudRange) {
+      this.hudRange.textContent = era.dataset.eraRange || '';
+    }
+  },
+
+  toggleCard(card) {
+    if (card.classList.contains('is-open')) {
+      this.closeCard(card);
+      return;
+    }
+
+    const era = card.closest('[data-era]');
+    if (era) {
+      era.querySelectorAll('[data-tech-card].is-open').forEach((openCard) => {
+        if (openCard !== card) {
+          this.closeCard(openCard);
+        }
+      });
+    }
+
+    this.openCard(card);
+  },
+
+  openCard(card) {
+    const { toggle, panel } = this._getCardParts(card);
+    if (!toggle || !panel) return;
+
+    card.classList.add('is-open');
+    toggle.setAttribute('aria-expanded', 'true');
+    panel.setAttribute('aria-hidden', 'false');
+    panel.style.maxHeight = '0px';
+
+    requestAnimationFrame(() => {
+      panel.style.maxHeight = `${panel.scrollHeight}px`;
+    });
+  },
+
+  closeCard(card) {
+    const { toggle, panel } = this._getCardParts(card);
+    if (!toggle || !panel) return;
+
+    if (panel.style.maxHeight === 'none') {
+      panel.style.maxHeight = `${panel.scrollHeight}px`;
+      panel.offsetHeight;
+    }
+
+    toggle.setAttribute('aria-expanded', 'false');
+    panel.setAttribute('aria-hidden', 'true');
+    card.classList.remove('is-open');
+
+    requestAnimationFrame(() => {
+      panel.style.maxHeight = '0px';
+    });
+  }
+};
+
 function updateToggleIcon() {
   const moon = document.getElementById('icon-moon');
   const sun  = document.getElementById('icon-sun');
@@ -360,6 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
   RevealObserver.init();
   ScrollProgress.init();
   NavDots.init();
+  TimelineSection.init();
   updateToggleIcon();
 
   // Phase 2: Hero
