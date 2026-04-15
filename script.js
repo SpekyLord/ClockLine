@@ -1036,6 +1036,7 @@ const PollSection = {
   qrLink: null,
   app: null,
   db: null,
+  sdk: null,
   pollRef: null,
   isSubmitting: false,
   hasRealtimeData: false,
@@ -1175,7 +1176,7 @@ const PollSection = {
       if (!confirmed) return;
 
       try {
-        await this.pollRef.set({ ...this.defaults });
+        await this.sdk.set(this.pollRef, { ...this.defaults });
         this._setError('');
         this._setConfirmation('Poll has been reset by admin.');
       } catch (error) {
@@ -1190,13 +1191,15 @@ const PollSection = {
       return;
     }
 
-    if (!window.firebase || !window.firebase.apps) {
-      this._setError('Live sync is offline. Add Firebase config to enable real-time polling.');
+    if (!window.__FIREBASE_RTDB__) {
+      this._setError('Live sync is offline. Firebase module failed to load.');
       this._setLoading('Live poll is unavailable in this build.', true);
       return;
     }
 
-    const firebaseConfig = {
+    this.sdk = window.__FIREBASE_RTDB__;
+
+    const firebaseConfig = window.__FIREBASE_CONFIG__ || {
       apiKey: 'REPLACE_WITH_FIREBASE_API_KEY',
       authDomain: 'REPLACE_WITH_FIREBASE_AUTH_DOMAIN',
       databaseURL: 'REPLACE_WITH_FIREBASE_DATABASE_URL',
@@ -1206,17 +1209,31 @@ const PollSection = {
       appId: 'REPLACE_WITH_FIREBASE_APP_ID'
     };
 
-    const hasRealConfig = Object.values(firebaseConfig).every((value) => typeof value === 'string' && !value.startsWith('REPLACE_WITH_'));
+    const requiredKeys = [
+      'apiKey',
+      'authDomain',
+      'databaseURL',
+      'projectId',
+      'storageBucket',
+      'messagingSenderId',
+      'appId'
+    ];
+
+    const hasRealConfig = requiredKeys.every((key) => {
+      const value = firebaseConfig[key];
+      return typeof value === 'string' && value.length > 0 && !value.startsWith('REPLACE_WITH_');
+    });
+
     if (!hasRealConfig) {
-      this._setError('Firebase placeholder config detected. Replace credentials to enable live voting.');
+      this._setError('Firebase config is incomplete. Paste your project config into window.__FIREBASE_CONFIG__ in index.html.');
       this._setLoading('Waiting for Firebase production credentials.', true);
       return;
     }
 
     try {
-      this.app = window.firebase.apps.length ? window.firebase.app() : window.firebase.initializeApp(firebaseConfig);
-      this.db = window.firebase.database(this.app);
-      this.pollRef = this.db.ref('polls/info_age_poll');
+      this.app = this.sdk.getOrInitApp(firebaseConfig);
+      this.db = this.sdk.getDatabase(this.app);
+      this.pollRef = this.sdk.ref(this.db, 'polls/info_age_poll');
       this._setError('');
       this._setLoading('Connecting to realtime results...', true);
       this._listenForResults();
@@ -1230,7 +1247,7 @@ const PollSection = {
     if (!this.pollRef || this.isFirebaseListenerBound) return;
     this.isFirebaseListenerBound = true;
 
-    this.pollRef.on('value', (snapshot) => {
+    this.sdk.onValue(this.pollRef, (snapshot) => {
       const raw = snapshot && snapshot.val() ? snapshot.val() : {};
       const normalized = { ...this.defaults };
 
@@ -1274,8 +1291,8 @@ const PollSection = {
     this._setButtonsDisabled(this.hasVoted);
 
     try {
-      const optionRef = this.pollRef.child(key);
-      await optionRef.transaction((current) => {
+      const optionRef = this.sdk.child(this.pollRef, key);
+      await this.sdk.runTransaction(optionRef, (current) => {
         const base = Number(current);
         return Number.isFinite(base) ? base + 1 : 1;
       });

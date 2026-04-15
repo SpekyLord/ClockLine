@@ -1508,10 +1508,23 @@
     </div>
   </section>
 
-  <!-- Firebase + QR code dependencies for live poll (Phase 8) -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <!-- Firebase module bridge + QR code dependency for live poll (Phase 8) -->
+  <script type="module" src="firebase-client.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <!-- Firebase config: paste your project values here -->
+  <script>
+    window.__FIREBASE_CONFIG__ = {
+      apiKey: 'AIzaSyAAPRtfo7PF3lJCiYxLD6dDTLs8vqfbVIk',
+      authDomain: 'clockline-93e52.firebaseapp.com',
+      databaseURL: 'https://clockline-93e52-default-rtdb.asia-southeast1.firebasedatabase.app',
+      projectId: 'clockline-93e52',
+      storageBucket: 'clockline-93e52.firebasestorage.app',
+      messagingSenderId: '905387385266',
+      appId: '1:905387385266:web:0a631167cd96db138304ab',
+      measurementId: 'G-35GYHRQX1V'
+    };
+  </script>
 
   <!-- Main script -->
   <script src="script.js"></script>
