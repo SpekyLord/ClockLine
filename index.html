@@ -1441,20 +1441,6 @@
       </article>
     </div>
 
-    <div class="simulator-popup-layer" data-sim-popup-layer aria-hidden="true" data-sim-preserve></div>
-
-    <div class="simulator-reflection" data-sim-reflection hidden data-sim-preserve>
-      <div class="simulator-reflection-card" data-sim-preserve>
-        <p>
-          In just 8 seconds, you experienced what approximately 2.2 billion people without internet access face every day —
-          no messaging, no maps, no cloud documents, no emergency coordination.
-          The ITU reports Internet use at 94% in high-income countries but only 23% in low-income countries.
-          Access Now documented at least 313 shutdowns across 52 countries in 2025 alone.
-          The Information Age is not equally distributed.
-        </p>
-      </div>
-    </div>
-
     <audio id="sim-audio-disconnect" preload="none" data-sim-preserve>
       <source src="assets/sounds/disconnect.mp3" type="audio/mpeg">
     </audio>
@@ -1462,6 +1448,72 @@
       <source src="assets/sounds/restore.mp3" type="audio/mpeg">
     </audio>
   </section>
+
+  <!-- ============================================================
+       INTERNET SIMULATOR OVERLAY (full-screen, outside section)
+       ============================================================ -->
+  <div id="sim-overlay" class="sim-overlay" aria-modal="true" role="dialog" aria-label="Internet disconnected simulation" hidden>
+
+    <!-- Top status bar -->
+    <div class="sim-overlay-topbar">
+      <span class="sim-overlay-badge" id="sim-badge">● OFFLINE</span>
+      <span class="sim-overlay-countdown" id="sim-countdown" aria-live="polite"></span>
+    </div>
+
+    <!-- Main content -->
+    <div class="sim-overlay-body">
+
+      <!-- Left: big error state -->
+      <div class="sim-overlay-left">
+        <div class="sim-no-signal" aria-hidden="true">
+          <svg viewBox="0 0 80 80" fill="none">
+            <circle cx="40" cy="40" r="38" stroke="#ff335f" stroke-width="2" opacity="0.3"/>
+            <circle cx="40" cy="40" r="28" stroke="#ff335f" stroke-width="1.5" opacity="0.5"/>
+            <line x1="22" y1="22" x2="58" y2="58" stroke="#ff335f" stroke-width="3" stroke-linecap="round"/>
+            <path d="M16 34c6.5-9 16-15 24-15s17.5 6 24 15" stroke="#ff335f" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+            <path d="M22 41c4-6 10.5-10 18-10s14 4 18 10" stroke="#ff335f" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+            <circle cx="40" cy="56" r="3" fill="#ff335f"/>
+          </svg>
+        </div>
+        <h2 class="sim-overlay-headline">ERR_INTERNET_DISCONNECTED</h2>
+        <p class="sim-overlay-subline">No network connection could be established.</p>
+        <p class="sim-overlay-subline" style="opacity:0.5;font-size:0.8rem;">DNS_PROBE_FINISHED_NO_INTERNET</p>
+
+        <!-- Error popups container -->
+        <div class="sim-popup-zone" id="sim-popup-zone" aria-hidden="true"></div>
+      </div>
+
+      <!-- Right: terminal feed -->
+      <div class="sim-overlay-right">
+        <div class="sim-terminal">
+          <div class="sim-terminal-bar">
+            <span class="sim-dot red"></span>
+            <span class="sim-dot yellow"></span>
+            <span class="sim-dot green"></span>
+            <span class="sim-terminal-title">network_monitor.sh</span>
+          </div>
+          <div class="sim-terminal-body" id="sim-terminal-body" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reflection / restore area -->
+    <div class="sim-overlay-footer">
+      <div class="sim-reflection-text" id="sim-reflection-text" hidden>
+        <p>
+          In just 8 seconds, you felt it. Approximately <strong>2.2 billion people</strong> live this every day —
+          no messaging, no maps, no cloud access, no emergency coordination.<br>
+          Internet use: <strong>94%</strong> in high-income countries vs <strong>23%</strong> in low-income countries. <em>(ITU, 2025)</em><br>
+          Access Now documented <strong>313 shutdowns</strong> across 52 countries in 2025 alone.<br><br>
+          <strong>The Information Age is not equally distributed.</strong>
+        </p>
+      </div>
+      <button id="sim-overlay-restore" class="sim-overlay-restore-btn" type="button" hidden>
+        ↺ Restore the Internet
+      </button>
+    </div>
+
+  </div>
 
   <div class="section-transition t-simulator-credits" aria-hidden="true"></div>
 

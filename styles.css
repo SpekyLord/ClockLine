@@ -2204,6 +2204,300 @@ body.internet-disabled .simulator-section {
   /* Motion is intentionally forced on for this presentation build. */
 }
 
+/* —— Internet Simulator Overlay ————————————————————————————— */
+.sim-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9900;
+  background: #0d0d0d;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease;
+  overflow: hidden;
+}
+
+.sim-overlay:not([hidden]) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* glitchy scanline texture */
+.sim-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.015) 2px,
+    rgba(255, 255, 255, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top status bar */
+.sim-overlay-topbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1.2rem;
+  background: rgba(255, 30, 60, 0.08);
+  border-bottom: 1px solid rgba(255, 30, 60, 0.2);
+}
+
+.sim-overlay-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #ff3355;
+  animation: simBadgeBlink 1s step-end infinite;
+}
+
+@keyframes simBadgeBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.sim-overlay-countdown {
+  font-size: 0.75rem;
+  color: rgba(255, 80, 100, 0.7);
+  letter-spacing: 0.08em;
+}
+
+/* Body layout */
+.sim-overlay-body {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  .sim-overlay-body {
+    grid-template-columns: 1fr;
+  }
+  .sim-overlay-right { display: none; }
+}
+
+/* Left side — error state */
+.sim-overlay-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 1.5rem;
+  border-right: 1px solid rgba(255, 30, 60, 0.12);
+}
+
+.sim-no-signal svg {
+  width: 80px;
+  height: 80px;
+  animation: simSignalPulse 2s ease-in-out infinite;
+}
+
+@keyframes simSignalPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.sim-overlay-headline {
+  font-family: var(--font-mono);
+  font-size: clamp(0.85rem, 2.2vw, 1.05rem);
+  color: #ff5577;
+  text-align: center;
+  letter-spacing: 0.04em;
+  word-break: break-all;
+}
+
+.sim-overlay-subline {
+  font-size: 0.8rem;
+  color: rgba(255, 180, 180, 0.6);
+  text-align: center;
+  margin: 0;
+}
+
+/* Error popup zone (contained within left side) */
+.sim-popup-zone {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.sim-popup-zone .sim-err-popup {
+  position: absolute;
+  background: #1a0a0a;
+  border: 1px solid rgba(255, 50, 80, 0.45);
+  border-radius: 0.4rem;
+  overflow: hidden;
+  font-size: 0.72rem;
+  color: #ffb0b8;
+  min-width: 180px;
+  max-width: 260px;
+  animation: simErrIn 200ms ease forwards;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.sim-err-popup.is-leaving {
+  animation: simErrOut 200ms ease forwards;
+}
+
+.sim-err-popup-bar {
+  background: rgba(255, 30, 60, 0.2);
+  padding: 0.2rem 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-bottom: 1px solid rgba(255, 30, 60, 0.2);
+  font-size: 0.65rem;
+  color: rgba(255, 120, 140, 0.8);
+}
+
+.sim-err-popup-bar::before {
+  content: '✕';
+  font-size: 0.6rem;
+  color: #ff5577;
+}
+
+.sim-err-popup-body {
+  padding: 0.4rem 0.5rem;
+}
+
+@keyframes simErrIn {
+  from { opacity: 0; transform: scale(0.9) translateY(-6px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes simErrOut {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.92) translateY(4px); }
+}
+
+/* Right side — terminal */
+.sim-overlay-right {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  justify-content: center;
+}
+
+.sim-terminal {
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.6rem;
+  overflow: hidden;
+  max-height: 60vh;
+}
+
+.sim-terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.8rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sim-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+.sim-dot.red    { background: #ff5f57; }
+.sim-dot.yellow { background: #febc2e; }
+.sim-dot.green  { background: #28c840; }
+
+.sim-terminal-title {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.35);
+  margin-left: auto;
+}
+
+.sim-terminal-body {
+  padding: 0.8rem 1rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.55);
+  overflow-y: auto;
+  max-height: calc(60vh - 2rem);
+}
+
+.sim-terminal-line {
+  display: block;
+  animation: simLineFade 120ms ease forwards;
+  opacity: 0;
+}
+
+.sim-terminal-line.ok   { color: #28c840; }
+.sim-terminal-line.warn { color: #febc2e; }
+.sim-terminal-line.err  { color: #ff5f57; }
+.sim-terminal-line.dim  { color: rgba(255,255,255,0.3); }
+
+@keyframes simLineFade {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Footer — reflection + restore */
+.sim-overlay-footer {
+  position: relative;
+  z-index: 2;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+
+.sim-reflection-text {
+  font-family: var(--font-body);
+  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  max-width: 68ch;
+  animation: simFadeUp 500ms ease forwards;
+}
+
+.sim-reflection-text strong { color: #fff; }
+.sim-reflection-text em { color: rgba(255,255,255,0.45); font-style: normal; }
+
+@keyframes simFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sim-overlay-restore-btn {
+  background: transparent;
+  border: 1px solid rgba(0, 255, 136, 0.5);
+  color: #00ff88;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.6rem 1.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: background 200ms ease, box-shadow 200ms ease;
+  animation: simFadeUp 400ms ease forwards;
+}
+
+.sim-overlay-restore-btn:hover {
+  background: rgba(0, 255, 136, 0.1);
+  box-shadow: 0 0 18px rgba(0, 255, 136, 0.3);
+}
+
 /* —— Section 9: Conclusion & Credits ——————————————————————— */
 .credits-section {
   --section-seam-color: #1a090f;

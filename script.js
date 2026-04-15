@@ -1391,333 +1391,264 @@ const PollSection = {
 };
 
 const InternetSimulator = {
-  section: null,
+  // DOM refs
   disableBtn: null,
-  restoreBtn: null,
-  restoreWrap: null,
   statusEl: null,
-  popupLayer: null,
-  reflectionEl: null,
+  overlay: null,
+  terminalBody: null,
+  popupZone: null,
+  countdownEl: null,
+  reflectionText: null,
+  overlayRestoreBtn: null,
   disconnectAudio: null,
   restoreAudio: null,
+
+  // State
+  isDisconnected: false,
   timers: [],
   popupInterval: null,
-  textMap: new Map(),
-  imageStyleMap: new Map(),
-  isDisconnected: false,
-  running: false,
-  replacementCursor: 0,
-  replacementBatchSize: 1,
-  replacementDelay: 100,
-  textReplacementQueue: [],
+  countdownInterval: null,
+  countdownSec: 8,
+
+  // Terminal lines that print during the simulation
+  terminalLines: [
+    { delay: 200,  cls: 'dim', text: '$ ping google.com' },
+    { delay: 700,  cls: 'warn', text: 'Request timeout for icmp_seq 0' },
+    { delay: 1100, cls: 'warn', text: 'Request timeout for icmp_seq 1' },
+    { delay: 1500, cls: 'err',  text: '--- google.com ping statistics ---' },
+    { delay: 1800, cls: 'err',  text: '3 packets transmitted, 0 received, 100% loss' },
+    { delay: 2200, cls: 'dim',  text: '' },
+    { delay: 2300, cls: 'dim',  text: '$ curl -I youtube.com' },
+    { delay: 2700, cls: 'err',  text: 'curl: (6) Could not resolve host: youtube.com' },
+    { delay: 3100, cls: 'dim',  text: '' },
+    { delay: 3200, cls: 'dim',  text: '$ nslookup facebook.com' },
+    { delay: 3600, cls: 'err',  text: ';; connection timed out; no servers could be reached' },
+    { delay: 4000, cls: 'dim',  text: '' },
+    { delay: 4100, cls: 'warn', text: 'Checking DNS servers...' },
+    { delay: 4600, cls: 'err',  text: 'ERROR: All DNS servers unreachable' },
+    { delay: 5000, cls: 'dim',  text: '' },
+    { delay: 5100, cls: 'warn', text: 'Checking network interfaces...' },
+    { delay: 5500, cls: 'ok',   text: 'eth0: UP   (192.168.1.5/24)' },
+    { delay: 5700, cls: 'err',  text: 'gateway: UNREACHABLE' },
+    { delay: 6000, cls: 'dim',  text: '' },
+    { delay: 6100, cls: 'err',  text: '!!! INTERNET CONNECTION LOST !!!' },
+    { delay: 6500, cls: 'dim',  text: 'Affected: messaging, maps, cloud, auth, payments...' },
+    { delay: 7000, cls: 'dim',  text: 'Estimated 2.2 billion people experience this daily.' },
+  ],
+
+  // Popup messages — contained inside the overlay popup zone
   errorMessages: [
-    'Connection Lost',
-    'Cannot reach server',
-    'Network unreachable'
+    { title: 'Google Chrome', body: 'ERR_INTERNET_DISCONNECTED' },
+    { title: 'Network Error', body: 'Cannot reach server — check your connection' },
+    { title: 'DNS Failure',   body: 'DNS_PROBE_FINISHED_NO_INTERNET' },
+    { title: 'App Error',     body: 'Facebook — No network connection' },
+    { title: 'Mail Failed',   body: 'Gmail — Unable to sync. Reconnecting...' },
+    { title: 'Maps Offline',  body: 'Google Maps — Enable internet to load routes' },
   ],
 
   init() {
-    this.section = document.getElementById('simulator');
-    if (!this.section) return;
-
-    this.disableBtn = document.getElementById('sim-disable-btn');
-    this.restoreBtn = document.getElementById('sim-restore-btn');
-    this.restoreWrap = document.getElementById('sim-restore-wrap');
-    this.statusEl = this.section.querySelector('[data-sim-status]');
-    this.popupLayer = this.section.querySelector('[data-sim-popup-layer]');
-    this.reflectionEl = this.section.querySelector('[data-sim-reflection]');
+    this.disableBtn      = document.getElementById('sim-disable-btn');
+    this.statusEl        = document.querySelector('[data-sim-status]');
+    this.overlay         = document.getElementById('sim-overlay');
+    this.terminalBody    = document.getElementById('sim-terminal-body');
+    this.popupZone       = document.getElementById('sim-popup-zone');
+    this.countdownEl     = document.getElementById('sim-countdown');
+    this.reflectionText  = document.getElementById('sim-reflection-text');
+    this.overlayRestoreBtn = document.getElementById('sim-overlay-restore');
     this.disconnectAudio = document.getElementById('sim-audio-disconnect');
-    this.restoreAudio = document.getElementById('sim-audio-restore');
+    this.restoreAudio    = document.getElementById('sim-audio-restore');
 
     if (this.disableBtn) {
       this.disableBtn.addEventListener('click', () => this.disconnect());
     }
-
-    if (this.restoreBtn) {
-      this.restoreBtn.addEventListener('click', () => this.restore());
+    if (this.overlayRestoreBtn) {
+      this.overlayRestoreBtn.addEventListener('click', () => this.restore());
     }
 
     this._setStatus('Internet status: Online');
   },
 
   disconnect() {
-    if (this.running || this.isDisconnected) return;
-
-    this.running = true;
+    if (this.isDisconnected) return;
     this.isDisconnected = true;
-    this._clearScheduledSteps();
-    this._hideReflectionImmediate();
-    this._hideRestoreButton();
-    this._clearPopups();
 
     if (this.disableBtn) {
       this.disableBtn.disabled = true;
       this.disableBtn.setAttribute('aria-disabled', 'true');
     }
-
-    this._setStatus('Internet status: Disconnecting...');
+    this._setStatus('Internet status: Disconnected');
     this._playSound(this.disconnectAudio);
 
-    this._enterGrayState();
+    // Show overlay
+    this._showOverlay();
 
-    this._scheduleStep(() => {
-      this._applyImageFilters();
-      this._setStatus('Internet status: Signal degraded. Media unavailable.');
-    }, 1000);
+    // Print terminal lines on their scheduled delays
+    this.terminalLines.forEach(({ delay, cls, text }) => {
+      const t = window.setTimeout(() => {
+        this._printLine(cls, text);
+      }, delay);
+      this.timers.push(t);
+    });
 
-    this._scheduleStep(() => {
-      this._prepareTextQueue();
-      this._replaceTextGradually();
-      this._setStatus('Internet status: Content load failure in progress.');
-    }, 2000);
+    // Start error popups after 2.5s
+    const popupStart = window.setTimeout(() => this._startPopupStream(), 2500);
+    this.timers.push(popupStart);
 
-    this._scheduleStep(() => {
-      this._startPopupStream();
-      this._setStatus('Internet status: Multiple network errors detected.');
-    }, 3000);
+    // Start countdown
+    this._startCountdown();
 
-    this._scheduleStep(() => {
-      this._showRestoreButton();
-      this._setStatus('Internet status: Offline. Use restore to recover.');
-      this.running = false;
+    // After 8s: show reflection + restore button
+    const endTimer = window.setTimeout(() => {
+      this._stopPopupStream();
+      this._showReflection();
     }, 8000);
+    this.timers.push(endTimer);
   },
 
   restore() {
     if (!this.isDisconnected) return;
-
-    this.running = false;
     this.isDisconnected = false;
 
-    this._clearScheduledSteps();
-    this._stopPopupStream();
-    this._clearPopups();
-    this._hideRestoreButton();
-    this._restoreText();
-    this._restoreImageFilters();
-    this._exitGrayState();
-    this._setStatus('Internet status: Restoring services...');
+    this._clearAll();
     this._playSound(this.restoreAudio);
+    this._hideOverlay();
+    this._setStatus('Internet status: Online');
 
     if (this.disableBtn) {
       this.disableBtn.disabled = false;
       this.disableBtn.setAttribute('aria-disabled', 'false');
     }
-
-    this._showReflection();
-
-    this._scheduleStep(() => {
-      this._hideReflectionImmediate();
-      this._setStatus('Internet status: Online');
-    }, 6000);
   },
 
-  _scheduleStep(callback, delayMs) {
-    const timer = window.setTimeout(() => {
-      this.timers = this.timers.filter((id) => id !== timer);
-      callback();
-    }, delayMs);
-    this.timers.push(timer);
+  // ── Overlay ──────────────────────────────────────────────────
+  _showOverlay() {
+    if (!this.overlay) return;
+    this.overlay.hidden = false;
+    // Reset state
+    if (this.terminalBody) this.terminalBody.innerHTML = '';
+    if (this.reflectionText) this.reflectionText.hidden = true;
+    if (this.overlayRestoreBtn) this.overlayRestoreBtn.hidden = true;
+    if (this.popupZone) this.popupZone.innerHTML = '';
+    requestAnimationFrame(() => {
+      // opacity transition handled by CSS :not([hidden])
+    });
   },
 
-  _clearScheduledSteps() {
-    this.timers.forEach((timer) => window.clearTimeout(timer));
-    this.timers = [];
-  },
-
-  _setStatus(message) {
-    if (this.statusEl) {
-      this.statusEl.textContent = message;
-    }
-  },
-
-  _enterGrayState() {
-    document.body.classList.add('internet-disabled');
-  },
-
-  _exitGrayState() {
-    document.body.classList.remove('internet-disabled');
-  },
-
-  _applyImageFilters() {
-    const images = Array.from(document.querySelectorAll('img')).filter((img) => !img.closest('[data-sim-preserve]'));
-    images.forEach((img) => {
-      if (!this.imageStyleMap.has(img)) {
-        this.imageStyleMap.set(img, {
-          filter: img.style.filter || '',
-          transition: img.style.transition || ''
-        });
+  _hideOverlay() {
+    if (!this.overlay) return;
+    this.overlay.style.opacity = '0';
+    const t = window.setTimeout(() => {
+      if (this.overlay) {
+        this.overlay.hidden = true;
+        this.overlay.style.opacity = '';
+        if (this.terminalBody) this.terminalBody.innerHTML = '';
+        if (this.reflectionText) this.reflectionText.hidden = true;
+        if (this.overlayRestoreBtn) this.overlayRestoreBtn.hidden = true;
+        if (this.popupZone) this.popupZone.innerHTML = '';
+        if (this.countdownEl) this.countdownEl.textContent = '';
       }
-
-      img.style.transition = img.style.transition
-        ? `${img.style.transition}, filter 320ms ease`
-        : 'filter 320ms ease';
-      img.style.filter = 'grayscale(100%) blur(4px)';
-    });
+    }, 420);
+    this.timers.push(t);
   },
 
-  _restoreImageFilters() {
-    this.imageStyleMap.forEach((saved, img) => {
-      if (!img) return;
-      img.style.filter = saved.filter;
-      img.style.transition = saved.transition;
-    });
-    this.imageStyleMap.clear();
+  // ── Terminal ─────────────────────────────────────────────────
+  _printLine(cls, text) {
+    if (!this.terminalBody) return;
+    const span = document.createElement('span');
+    span.className = `sim-terminal-line ${cls}`;
+    span.textContent = text || '\u00a0';
+    this.terminalBody.appendChild(span);
+    this.terminalBody.scrollTop = this.terminalBody.scrollHeight;
   },
 
-  _prepareTextQueue() {
-    this.textReplacementQueue = [];
-    this.replacementCursor = 0;
-
-    const roots = [
-      document.getElementById('impact'),
-      document.getElementById('challenges'),
-      document.getElementById('future'),
-      document.getElementById('poll'),
-      document.getElementById('simulator'),
-      document.getElementById('credits')
-    ].filter(Boolean);
-
-    roots.forEach((root) => {
-      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-        acceptNode: (node) => {
-          if (!node || !node.parentElement) return NodeFilter.FILTER_REJECT;
-          const text = node.nodeValue || '';
-          if (!text.trim()) return NodeFilter.FILTER_REJECT;
-
-          const parent = node.parentElement;
-          if (parent.closest('[data-sim-preserve]')) return NodeFilter.FILTER_REJECT;
-          if (parent.closest('button, input, textarea, select, option, script, style, noscript, svg')) {
-            return NodeFilter.FILTER_REJECT;
-          }
-
-          return NodeFilter.FILTER_ACCEPT;
-        }
-      });
-
-      let current = walker.nextNode();
-      while (current) {
-        this.textReplacementQueue.push(current);
-        current = walker.nextNode();
-      }
-    });
+  // ── Countdown ────────────────────────────────────────────────
+  _startCountdown() {
+    let remaining = this.countdownSec;
+    this._setCountdown(remaining);
+    this.countdownInterval = window.setInterval(() => {
+      remaining--;
+      this._setCountdown(remaining);
+      if (remaining <= 0) this._stopCountdown();
+    }, 1000);
   },
 
-  _replaceTextGradually() {
-    if (!this.isDisconnected) return;
-
-    const nextNodes = this.textReplacementQueue.slice(this.replacementCursor, this.replacementCursor + this.replacementBatchSize);
-    if (!nextNodes.length) return;
-
-    nextNodes.forEach((node) => {
-      if (!this.textMap.has(node)) {
-        this.textMap.set(node, node.nodeValue || '');
-      }
-      node.nodeValue = '[Cannot Load]';
-    });
-
-    this.replacementCursor += this.replacementBatchSize;
-
-    if (this.replacementCursor < this.textReplacementQueue.length) {
-      this._scheduleStep(() => this._replaceTextGradually(), this.replacementDelay);
+  _stopCountdown() {
+    if (this.countdownInterval) {
+      window.clearInterval(this.countdownInterval);
+      this.countdownInterval = null;
     }
+    if (this.countdownEl) this.countdownEl.textContent = '';
   },
 
-  _restoreText() {
-    this.textMap.forEach((value, node) => {
-      if (!node) return;
-      node.nodeValue = value;
-    });
-
-    this.textMap.clear();
-    this.textReplacementQueue = [];
-    this.replacementCursor = 0;
+  _setCountdown(sec) {
+    if (!this.countdownEl) return;
+    this.countdownEl.textContent = sec > 0
+      ? `Restore available in ${sec}s`
+      : '';
   },
 
-  _showRestoreButton() {
-    if (!this.restoreWrap) return;
-    this.restoreWrap.hidden = false;
-    if (this.restoreBtn) {
-      this.restoreBtn.focus();
-    }
-  },
-
-  _hideRestoreButton() {
-    if (!this.restoreWrap) return;
-    this.restoreWrap.hidden = true;
-  },
-
+  // ── Error Popups (inside overlay popup zone) ─────────────────
   _startPopupStream() {
-    if (!this.popupLayer || this.popupInterval) return;
+    if (this.popupInterval) return;
     this._spawnPopup();
-    this.popupInterval = window.setInterval(() => {
-      this._spawnPopup();
-    }, 1500);
+    this.popupInterval = window.setInterval(() => this._spawnPopup(), 1800);
   },
 
   _stopPopupStream() {
-    if (!this.popupInterval) return;
-    window.clearInterval(this.popupInterval);
-    this.popupInterval = null;
+    if (this.popupInterval) {
+      window.clearInterval(this.popupInterval);
+      this.popupInterval = null;
+    }
   },
 
   _spawnPopup() {
-    if (!this.popupLayer || !this.isDisconnected) return;
+    if (!this.popupZone || !this.isDisconnected) return;
 
+    const msg = this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
     const popup = document.createElement('div');
-    popup.className = 'simulator-error-popup';
-    popup.textContent = this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
+    popup.className = 'sim-err-popup';
 
-    const topPct = 10 + Math.random() * 76;
-    const leftPct = 6 + Math.random() * 76;
-    popup.style.top = `${topPct}%`;
-    popup.style.left = `${leftPct}%`;
+    // Position randomly within the zone
+    popup.style.top  = `${Math.random() * 55}%`;
+    popup.style.left = `${Math.random() * 30}%`;
 
-    this.popupLayer.appendChild(popup);
+    popup.innerHTML = `
+      <div class="sim-err-popup-bar">${msg.title}</div>
+      <div class="sim-err-popup-body">${msg.body}</div>
+    `;
+    this.popupZone.appendChild(popup);
 
-    const leaveTimer = window.setTimeout(() => {
-      popup.classList.add('is-leaving');
-    }, 1800);
-
-    const removeTimer = window.setTimeout(() => {
-      popup.remove();
-    }, 2100);
-
-    this.timers.push(leaveTimer, removeTimer);
+    const leaveT  = window.setTimeout(() => popup.classList.add('is-leaving'), 2200);
+    const removeT = window.setTimeout(() => popup.remove(), 2500);
+    this.timers.push(leaveT, removeT);
   },
 
-  _clearPopups() {
-    if (!this.popupLayer) return;
-    this.popupLayer.innerHTML = '';
-  },
-
+  // ── Reflection ───────────────────────────────────────────────
   _showReflection() {
-    if (!this.reflectionEl) return;
-    this.reflectionEl.hidden = false;
-
-    requestAnimationFrame(() => {
-      this.reflectionEl.classList.add('is-visible');
-    });
+    if (this.reflectionText)  this.reflectionText.hidden = false;
+    if (this.overlayRestoreBtn) this.overlayRestoreBtn.hidden = false;
+    if (this.overlayRestoreBtn) this.overlayRestoreBtn.focus();
   },
 
-  _hideReflectionImmediate() {
-    if (!this.reflectionEl) return;
-    this.reflectionEl.classList.remove('is-visible');
-    this.reflectionEl.hidden = true;
+  // ── Helpers ──────────────────────────────────────────────────
+  _clearAll() {
+    this.timers.forEach((id) => window.clearTimeout(id));
+    this.timers = [];
+    this._stopPopupStream();
+    this._stopCountdown();
+  },
+
+  _setStatus(msg) {
+    if (this.statusEl) this.statusEl.textContent = msg;
   },
 
   _playSound(audioEl) {
     if (!audioEl) return;
-
     try {
       audioEl.currentTime = 0;
-      const playPromise = audioEl.play();
-      if (playPromise && typeof playPromise.catch === 'function') {
-        playPromise.catch(() => {});
-      }
-    } catch (error) {
-      // Sound effects are optional; silently continue when unavailable.
-    }
+      const p = audioEl.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    } catch (e) {}
   }
 };
 
