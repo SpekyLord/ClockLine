@@ -1382,9 +1382,57 @@
   <!-- ============================================================
        SECTION 8: WHAT IF THE INTERNET DISAPPEARED?
        ============================================================ -->
-  <!-- TODO: Implement in Phase 9 -->
-  <section id="simulator" aria-label="Internet disappearance simulator">
-    <p><!-- Phase 9: Internet simulator goes here --></p>
+  <section id="simulator" class="simulator-section" aria-labelledby="simulator-title">
+    <div class="container simulator-layout">
+      <div class="simulator-heading">
+        <p class="section-label reveal">WOW Moment</p>
+        <h2 id="simulator-title" class="reveal">What if the internet disappeared right now?</h2>
+        <p class="simulator-intro reveal">
+          Press the trigger and experience a rapid network-collapse simulation in 8 seconds.
+        </p>
+      </div>
+
+      <article class="card simulator-panel reveal" data-sim-preserve>
+        <p class="simulator-kicker" data-sim-preserve>Simulation Control</p>
+        <button
+          id="sim-disable-btn"
+          class="simulator-trigger"
+          type="button"
+          data-sim-preserve
+          aria-describedby="simulator-status"
+        >
+          Click to disable the internet
+        </button>
+
+        <div class="simulator-restore-wrap" id="sim-restore-wrap" data-sim-preserve hidden>
+          <button id="sim-restore-btn" class="btn-secondary simulator-restore" type="button" data-sim-preserve>
+            Restore the Internet
+          </button>
+        </div>
+
+        <p class="simulator-status" id="simulator-status" data-sim-status aria-live="polite" data-sim-preserve>
+          Internet status: Online
+        </p>
+      </article>
+    </div>
+
+    <div class="simulator-popup-layer" data-sim-popup-layer aria-hidden="true" data-sim-preserve></div>
+
+    <div class="simulator-reflection" data-sim-reflection hidden data-sim-preserve>
+      <div class="simulator-reflection-card" data-sim-preserve>
+        <p>
+          In just 8 seconds, you experienced what 2.6 billion people without internet face every day.
+          The Information Age is not equally distributed.
+        </p>
+      </div>
+    </div>
+
+    <audio id="sim-audio-disconnect" preload="none" data-sim-preserve>
+      <source src="assets/sounds/disconnect.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sim-audio-restore" preload="none" data-sim-preserve>
+      <source src="assets/sounds/restore.mp3" type="audio/mpeg">
+    </audio>
   </section>
 
   <!-- ============================================================

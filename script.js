@@ -1266,6 +1266,337 @@ const PollSection = {
   }
 };
 
+const InternetSimulator = {
+  section: null,
+  disableBtn: null,
+  restoreBtn: null,
+  restoreWrap: null,
+  statusEl: null,
+  popupLayer: null,
+  reflectionEl: null,
+  disconnectAudio: null,
+  restoreAudio: null,
+  timers: [],
+  popupInterval: null,
+  textMap: new Map(),
+  imageStyleMap: new Map(),
+  isDisconnected: false,
+  running: false,
+  replacementCursor: 0,
+  replacementBatchSize: 1,
+  replacementDelay: 100,
+  textReplacementQueue: [],
+  errorMessages: [
+    'Connection Lost',
+    'Cannot reach server',
+    'Network unreachable'
+  ],
+
+  init() {
+    this.section = document.getElementById('simulator');
+    if (!this.section) return;
+
+    this.disableBtn = document.getElementById('sim-disable-btn');
+    this.restoreBtn = document.getElementById('sim-restore-btn');
+    this.restoreWrap = document.getElementById('sim-restore-wrap');
+    this.statusEl = this.section.querySelector('[data-sim-status]');
+    this.popupLayer = this.section.querySelector('[data-sim-popup-layer]');
+    this.reflectionEl = this.section.querySelector('[data-sim-reflection]');
+    this.disconnectAudio = document.getElementById('sim-audio-disconnect');
+    this.restoreAudio = document.getElementById('sim-audio-restore');
+
+    if (this.disableBtn) {
+      this.disableBtn.addEventListener('click', () => this.disconnect());
+    }
+
+    if (this.restoreBtn) {
+      this.restoreBtn.addEventListener('click', () => this.restore());
+    }
+
+    this._setStatus('Internet status: Online');
+  },
+
+  disconnect() {
+    if (this.running || this.isDisconnected) return;
+
+    this.running = true;
+    this.isDisconnected = true;
+    this._clearScheduledSteps();
+    this._hideReflectionImmediate();
+    this._hideRestoreButton();
+    this._clearPopups();
+
+    if (this.disableBtn) {
+      this.disableBtn.disabled = true;
+      this.disableBtn.setAttribute('aria-disabled', 'true');
+    }
+
+    this._setStatus('Internet status: Disconnecting...');
+    this._playSound(this.disconnectAudio);
+
+    this._enterGrayState();
+
+    this._scheduleStep(() => {
+      this._applyImageFilters();
+      this._setStatus('Internet status: Signal degraded. Media unavailable.');
+    }, 1000);
+
+    this._scheduleStep(() => {
+      this._prepareTextQueue();
+      this._replaceTextGradually();
+      this._setStatus('Internet status: Content load failure in progress.');
+    }, 2000);
+
+    this._scheduleStep(() => {
+      this._startPopupStream();
+      this._setStatus('Internet status: Multiple network errors detected.');
+    }, 3000);
+
+    this._scheduleStep(() => {
+      this._showRestoreButton();
+      this._setStatus('Internet status: Offline. Use restore to recover.');
+      this.running = false;
+    }, 8000);
+  },
+
+  restore() {
+    if (!this.isDisconnected) return;
+
+    this.running = false;
+    this.isDisconnected = false;
+
+    this._clearScheduledSteps();
+    this._stopPopupStream();
+    this._clearPopups();
+    this._hideRestoreButton();
+    this._restoreText();
+    this._restoreImageFilters();
+    this._exitGrayState();
+    this._setStatus('Internet status: Restoring services...');
+    this._playSound(this.restoreAudio);
+
+    if (this.disableBtn) {
+      this.disableBtn.disabled = false;
+      this.disableBtn.setAttribute('aria-disabled', 'false');
+    }
+
+    this._showReflection();
+
+    this._scheduleStep(() => {
+      this._hideReflectionImmediate();
+      this._setStatus('Internet status: Online');
+    }, 6000);
+  },
+
+  _scheduleStep(callback, delayMs) {
+    const timer = window.setTimeout(() => {
+      this.timers = this.timers.filter((id) => id !== timer);
+      callback();
+    }, delayMs);
+    this.timers.push(timer);
+  },
+
+  _clearScheduledSteps() {
+    this.timers.forEach((timer) => window.clearTimeout(timer));
+    this.timers = [];
+  },
+
+  _setStatus(message) {
+    if (this.statusEl) {
+      this.statusEl.textContent = message;
+    }
+  },
+
+  _enterGrayState() {
+    document.body.classList.add('internet-disabled');
+  },
+
+  _exitGrayState() {
+    document.body.classList.remove('internet-disabled');
+  },
+
+  _applyImageFilters() {
+    const images = Array.from(document.querySelectorAll('img')).filter((img) => !img.closest('[data-sim-preserve]'));
+    images.forEach((img) => {
+      if (!this.imageStyleMap.has(img)) {
+        this.imageStyleMap.set(img, {
+          filter: img.style.filter || '',
+          transition: img.style.transition || ''
+        });
+      }
+
+      img.style.transition = img.style.transition
+        ? `${img.style.transition}, filter 320ms ease`
+        : 'filter 320ms ease';
+      img.style.filter = 'grayscale(100%) blur(4px)';
+    });
+  },
+
+  _restoreImageFilters() {
+    this.imageStyleMap.forEach((saved, img) => {
+      if (!img) return;
+      img.style.filter = saved.filter;
+      img.style.transition = saved.transition;
+    });
+    this.imageStyleMap.clear();
+  },
+
+  _prepareTextQueue() {
+    this.textReplacementQueue = [];
+    this.replacementCursor = 0;
+
+    const roots = [
+      document.getElementById('impact'),
+      document.getElementById('challenges'),
+      document.getElementById('future'),
+      document.getElementById('poll'),
+      document.getElementById('simulator'),
+      document.getElementById('credits')
+    ].filter(Boolean);
+
+    roots.forEach((root) => {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: (node) => {
+          if (!node || !node.parentElement) return NodeFilter.FILTER_REJECT;
+          const text = node.nodeValue || '';
+          if (!text.trim()) return NodeFilter.FILTER_REJECT;
+
+          const parent = node.parentElement;
+          if (parent.closest('[data-sim-preserve]')) return NodeFilter.FILTER_REJECT;
+          if (parent.closest('button, input, textarea, select, option, script, style, noscript, svg')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+
+      let current = walker.nextNode();
+      while (current) {
+        this.textReplacementQueue.push(current);
+        current = walker.nextNode();
+      }
+    });
+  },
+
+  _replaceTextGradually() {
+    if (!this.isDisconnected) return;
+
+    const nextNodes = this.textReplacementQueue.slice(this.replacementCursor, this.replacementCursor + this.replacementBatchSize);
+    if (!nextNodes.length) return;
+
+    nextNodes.forEach((node) => {
+      if (!this.textMap.has(node)) {
+        this.textMap.set(node, node.nodeValue || '');
+      }
+      node.nodeValue = '[Cannot Load]';
+    });
+
+    this.replacementCursor += this.replacementBatchSize;
+
+    if (this.replacementCursor < this.textReplacementQueue.length) {
+      this._scheduleStep(() => this._replaceTextGradually(), this.replacementDelay);
+    }
+  },
+
+  _restoreText() {
+    this.textMap.forEach((value, node) => {
+      if (!node) return;
+      node.nodeValue = value;
+    });
+
+    this.textMap.clear();
+    this.textReplacementQueue = [];
+    this.replacementCursor = 0;
+  },
+
+  _showRestoreButton() {
+    if (!this.restoreWrap) return;
+    this.restoreWrap.hidden = false;
+    if (this.restoreBtn) {
+      this.restoreBtn.focus();
+    }
+  },
+
+  _hideRestoreButton() {
+    if (!this.restoreWrap) return;
+    this.restoreWrap.hidden = true;
+  },
+
+  _startPopupStream() {
+    if (!this.popupLayer || this.popupInterval) return;
+    this._spawnPopup();
+    this.popupInterval = window.setInterval(() => {
+      this._spawnPopup();
+    }, 1500);
+  },
+
+  _stopPopupStream() {
+    if (!this.popupInterval) return;
+    window.clearInterval(this.popupInterval);
+    this.popupInterval = null;
+  },
+
+  _spawnPopup() {
+    if (!this.popupLayer || !this.isDisconnected) return;
+
+    const popup = document.createElement('div');
+    popup.className = 'simulator-error-popup';
+    popup.textContent = this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
+
+    const topPct = 10 + Math.random() * 76;
+    const leftPct = 6 + Math.random() * 76;
+    popup.style.top = `${topPct}%`;
+    popup.style.left = `${leftPct}%`;
+
+    this.popupLayer.appendChild(popup);
+
+    const leaveTimer = window.setTimeout(() => {
+      popup.classList.add('is-leaving');
+    }, 1800);
+
+    const removeTimer = window.setTimeout(() => {
+      popup.remove();
+    }, 2100);
+
+    this.timers.push(leaveTimer, removeTimer);
+  },
+
+  _clearPopups() {
+    if (!this.popupLayer) return;
+    this.popupLayer.innerHTML = '';
+  },
+
+  _showReflection() {
+    if (!this.reflectionEl) return;
+    this.reflectionEl.hidden = false;
+
+    requestAnimationFrame(() => {
+      this.reflectionEl.classList.add('is-visible');
+    });
+  },
+
+  _hideReflectionImmediate() {
+    if (!this.reflectionEl) return;
+    this.reflectionEl.classList.remove('is-visible');
+    this.reflectionEl.hidden = true;
+  },
+
+  _playSound(audioEl) {
+    if (!audioEl) return;
+
+    try {
+      audioEl.currentTime = 0;
+      const playPromise = audioEl.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(() => {});
+      }
+    } catch (error) {
+      // Sound effects are optional; silently continue when unavailable.
+    }
+  }
+};
+
 function updateToggleIcon() {
   const moon = document.getElementById('icon-moon');
   const sun  = document.getElementById('icon-sun');
@@ -1291,6 +1622,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ChallengesSection.init();
   FutureSection.init();
   PollSection.init();
+  InternetSimulator.init();
   updateToggleIcon();
 
   // Phase 2: Hero

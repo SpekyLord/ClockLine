@@ -1848,6 +1848,246 @@ section {
   }
 }
 
+/* —— Section 8: Internet Disappearance Simulator ——————————— */
+.simulator-section {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 420ms var(--easing);
+  background:
+    radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--color-accent) 13%, transparent), transparent 35%),
+    radial-gradient(circle at 84% 78%, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 34%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 82%, #1b050f), color-mix(in srgb, var(--color-bg) 95%, #04060a));
+}
+
+body.internet-disabled {
+  background-color: #1a1a1a;
+}
+
+body.internet-disabled .simulator-section {
+  background:
+    radial-gradient(circle at 16% 18%, rgba(123, 123, 123, 0.16), transparent 34%),
+    radial-gradient(circle at 86% 75%, rgba(94, 94, 94, 0.12), transparent 34%),
+    linear-gradient(180deg, #242424, #161616);
+}
+
+.simulator-layout {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 1.6rem;
+}
+
+.simulator-heading {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 760px;
+}
+
+.simulator-heading h2 {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  max-width: 13ch;
+}
+
+.simulator-intro {
+  color: var(--color-text-secondary);
+  max-width: 62ch;
+}
+
+.simulator-panel {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.simulator-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ff809f;
+}
+
+.simulator-trigger {
+  width: 100%;
+  max-width: 30rem;
+  justify-self: start;
+  border: 1px solid color-mix(in srgb, #ff335f 46%, transparent);
+  border-radius: 0.9rem;
+  background: linear-gradient(135deg, #ff335f, #ff006e 58%, #c90053);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2.2vw, 1.15rem);
+  font-weight: 700;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  box-shadow:
+    0 0 0 rgba(255, 0, 110, 0),
+    0 12px 28px rgba(255, 0, 110, 0.28);
+  animation: simPulse 1.5s ease-in-out infinite;
+  transition:
+    transform var(--duration-hover) var(--easing),
+    box-shadow var(--duration-hover) var(--easing),
+    filter var(--duration-hover) var(--easing),
+    opacity var(--duration-hover) var(--easing);
+}
+
+.simulator-trigger:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 24px rgba(255, 0, 110, 0.42),
+    0 14px 30px rgba(255, 0, 110, 0.3);
+}
+
+.simulator-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+  filter: grayscale(0.22);
+  animation-play-state: paused;
+}
+
+.simulator-restore-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.simulator-restore {
+  border-color: color-mix(in srgb, var(--color-success) 55%, transparent);
+  color: var(--color-success);
+}
+
+.simulator-restore:hover {
+  background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--color-success) 38%, transparent);
+}
+
+.simulator-status {
+  min-height: 1.4em;
+  color: var(--color-text-secondary);
+}
+
+.simulator-popup-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9800;
+}
+
+.simulator-error-popup {
+  position: fixed;
+  max-width: min(18rem, calc(100vw - 2rem));
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.55rem;
+  border: 1px solid color-mix(in srgb, #ff5a7e 70%, transparent);
+  background: color-mix(in srgb, #111111 86%, transparent);
+  color: #ffdce6;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.38);
+  opacity: 0;
+  transform: translateY(8px) scale(0.97);
+  animation: simPopupIn 220ms var(--easing) forwards;
+}
+
+.simulator-error-popup.is-leaving {
+  animation: simPopupOut 220ms var(--easing) forwards;
+}
+
+.simulator-reflection {
+  position: fixed;
+  inset: 0;
+  z-index: 9850;
+  background: color-mix(in srgb, #0a0a0f 78%, transparent);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms var(--easing);
+}
+
+.simulator-reflection.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.simulator-reflection-card {
+  width: min(92vw, 42rem);
+  padding: 1.4rem 1.25rem;
+  border-radius: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 24%, transparent);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--color-accent) 13%, transparent), transparent 48%),
+    color-mix(in srgb, var(--color-surface) 94%, transparent);
+  text-align: center;
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.34);
+}
+
+.simulator-reflection-card p {
+  margin: 0;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  line-height: 1.55;
+}
+
+@keyframes simPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 rgba(255, 0, 110, 0),
+      0 12px 28px rgba(255, 0, 110, 0.28);
+  }
+  50% {
+    box-shadow:
+      0 0 0 10px rgba(255, 0, 110, 0),
+      0 0 24px rgba(255, 0, 110, 0.36),
+      0 14px 30px rgba(255, 0, 110, 0.32);
+  }
+}
+
+@keyframes simPopupIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes simPopupOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+@media (max-width: 767px) {
+  .simulator-trigger {
+    max-width: 100%;
+    font-size: 1rem;
+  }
+
+  .simulator-error-popup {
+    font-size: 0.76rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .simulator-trigger {
+    animation: none;
+  }
+
+  .simulator-error-popup,
+  .simulator-error-popup.is-leaving {
+    animation-duration: 0.01ms;
+  }
+}
+
 .container {
   max-width: 1280px;
   margin-left: auto;
