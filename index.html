@@ -29,10 +29,18 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2300d4ff'/%3E%3Cstop offset='100%25' stop-color='%23ff006e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%230a0a0f'/%3E%3Ccircle cx='32' cy='32' r='18' fill='url(%23g)'/%3E%3Crect x='30' y='18' width='4' height='28' fill='%230a0a0f'/%3E%3C/svg%3E">
+
   <!-- Custom styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+  <!-- Network status banner for offline graceful behavior -->
+  <div id="network-banner" class="network-banner" role="status" aria-live="polite" hidden>
+    You are offline. Interactive live features may be unavailable until connection returns.
+  </div>
 
   <!-- ============================================================
        SCROLL PROGRESS BAR
@@ -1306,12 +1314,13 @@
       <div class="poll-grid">
         <article class="card poll-vote-card reveal" aria-labelledby="poll-vote-title">
           <h3 id="poll-vote-title">Vote Now</h3>
+          <p class="poll-loading" data-poll-loading aria-live="polite">Connecting to live poll...</p>
           <div class="poll-options" role="group" aria-label="Choose a technology to vote for">
-            <button class="poll-option" type="button" data-poll-vote="smartphone">Smartphone</button>
-            <button class="poll-option" type="button" data-poll-vote="internet">Internet/WWW</button>
-            <button class="poll-option" type="button" data-poll-vote="social_media">Social Media</button>
-            <button class="poll-option" type="button" data-poll-vote="ai">AI (ChatGPT, Claude)</button>
-            <button class="poll-option" type="button" data-poll-vote="streaming">Video Streaming</button>
+            <button class="poll-option" type="button" data-poll-vote="smartphone" aria-label="Vote for Smartphone">Smartphone</button>
+            <button class="poll-option" type="button" data-poll-vote="internet" aria-label="Vote for Internet and World Wide Web">Internet/WWW</button>
+            <button class="poll-option" type="button" data-poll-vote="social_media" aria-label="Vote for Social Media">Social Media</button>
+            <button class="poll-option" type="button" data-poll-vote="ai" aria-label="Vote for AI tools such as ChatGPT and Claude">AI (ChatGPT, Claude)</button>
+            <button class="poll-option" type="button" data-poll-vote="streaming" aria-label="Vote for Video Streaming">Video Streaming</button>
           </div>
           <p class="poll-confirmation" data-poll-confirmation aria-live="polite"></p>
           <p class="poll-error" data-poll-error aria-live="polite"></p>

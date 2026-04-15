@@ -59,6 +59,23 @@ body {
     color           var(--duration-default) var(--easing);
 }
 
+.network-banner {
+  position: fixed;
+  left: 50%;
+  top: 0.75rem;
+  transform: translateX(-50%);
+  width: min(92vw, 46rem);
+  border-radius: 0.6rem;
+  border: 1px solid color-mix(in srgb, #ff9a4b 45%, transparent);
+  background: color-mix(in srgb, #1a1a1a 90%, transparent);
+  color: #ffd8b0;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.88rem;
+  text-align: center;
+  z-index: 10020;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.34);
+}
+
 /* ── Typography ─────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
@@ -83,14 +100,7 @@ section {
 
 /* ── Accessibility ──────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+  /* Motion is intentionally forced on for this presentation build. */
 }
 
 /* ── Focus Styles ───────────────────────────────────────────── */
@@ -1678,6 +1688,16 @@ section {
   font-size: clamp(1.4rem, 3vw, 1.9rem);
 }
 
+.poll-loading {
+  min-height: 1.3em;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+.poll-loading.is-visible {
+  color: color-mix(in srgb, var(--color-primary) 82%, white);
+}
+
 .poll-options {
   display: grid;
   gap: 0.7rem;
@@ -1711,6 +1731,10 @@ section {
 .poll-option:disabled {
   cursor: not-allowed;
   opacity: 0.62;
+}
+
+.poll-option.is-busy {
+  opacity: 0.76;
 }
 
 .poll-option.is-selected {
@@ -2078,14 +2102,7 @@ body.internet-disabled .simulator-section {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .simulator-trigger {
-    animation: none;
-  }
-
-  .simulator-error-popup,
-  .simulator-error-popup.is-leaving {
-    animation-duration: 0.01ms;
-  }
+  /* Motion is intentionally forced on for this presentation build. */
 }
 
 /* —— Section 9: Conclusion & Credits ——————————————————————— */
@@ -2269,10 +2286,7 @@ body.internet-disabled .simulator-section {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .conclusion-particle {
-    animation: none;
-    opacity: 0;
-  }
+  /* Motion is intentionally forced on for this presentation build. */
 }
 
 .container {

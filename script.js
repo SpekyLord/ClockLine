@@ -5,6 +5,8 @@
 
 'use strict';
 
+const FORCE_MOTION_ALWAYS_ON = true;
+
 // ── Theme Management ─────────────────────────────────────────
 const Theme = {
   /** Read saved preference and apply it on page load. */
@@ -112,14 +114,26 @@ const ParticleCanvas = {
   MOBILE_COUNT: 28,   // particles on mobile (≤768px)
   MAX_DIST:  130,     // max px between linked particles
   MOUSE_PULL: 80,     // px radius of mouse influence
+  isReducedMotion: false,
 
   init() {
     this.canvas = document.getElementById('particle-canvas');
     if (!this.canvas) return;
     this.ctx = this.canvas.getContext('2d');
+    this.isReducedMotion = FORCE_MOTION_ALWAYS_ON
+      ? false
+      : window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     this._resize();
     this._spawnParticles();
+
+    // Keep the visual "node" design visible for reduced-motion users,
+    // but avoid continuous animation.
+    if (this.isReducedMotion) {
+      this._draw();
+      return;
+    }
+
     this._bindEvents();
     this._loop();
   },
@@ -851,7 +865,9 @@ const FutureSection = {
   section: null,
   cards: [],
   layers: [],
-  reduceMotionQuery: window.matchMedia('(prefers-reduced-motion: reduce)'),
+  reduceMotionQuery: FORCE_MOTION_ALWAYS_ON
+    ? { matches: false, addEventListener: () => {} }
+    : window.matchMedia('(prefers-reduced-motion: reduce)'),
 
   init() {
     this.section = document.getElementById('future');
@@ -1010,6 +1026,7 @@ const PollSection = {
   section: null,
   buttons: [],
   resultRows: new Map(),
+  loadingEl: null,
   confirmationEl: null,
   errorEl: null,
   totalEl: null,
@@ -1020,6 +1037,9 @@ const PollSection = {
   app: null,
   db: null,
   pollRef: null,
+  isSubmitting: false,
+  hasRealtimeData: false,
+  isFirebaseListenerBound: false,
   hasVoted: false,
   votedChoice: null,
   optionKeys: ['smartphone', 'internet', 'social_media', 'ai', 'streaming'],
@@ -1037,6 +1057,7 @@ const PollSection = {
     if (!this.section) return;
 
     this.buttons = Array.from(this.section.querySelectorAll('[data-poll-vote]'));
+    this.loadingEl = this.section.querySelector('[data-poll-loading]');
     this.confirmationEl = this.section.querySelector('[data-poll-confirmation]');
     this.errorEl = this.section.querySelector('[data-poll-error]');
     this.totalEl = this.section.querySelector('[data-poll-total]');
@@ -1061,12 +1082,20 @@ const PollSection = {
       this._setConfirmation('Thanks for voting! Your vote is already recorded on this browser.');
     }
 
+    this._setLoading('Connecting to live poll...', true);
     this._renderQr();
     this._bindButtons();
     this._bindAdminReset();
+    this._bindNetworkEvents();
 
     this._initFirebase();
     this._renderResults(this.defaults);
+  },
+
+  _setLoading(message, visible) {
+    if (!this.loadingEl) return;
+    this.loadingEl.textContent = message;
+    this.loadingEl.classList.toggle('is-visible', Boolean(visible));
   },
 
   _setConfirmation(message) {
@@ -1083,11 +1112,35 @@ const PollSection = {
 
   _setButtonsDisabled(disabled) {
     this.buttons.forEach((button) => {
-      button.disabled = disabled;
+      button.disabled = disabled || this.isSubmitting;
       button.setAttribute('aria-disabled', String(disabled));
       const key = button.getAttribute('data-poll-vote');
       button.classList.toggle('is-selected', Boolean(this.votedChoice) && key === this.votedChoice);
+      button.classList.toggle('is-busy', this.isSubmitting);
     });
+  },
+
+  _bindNetworkEvents() {
+    const applyNetworkState = () => {
+      if (navigator.onLine) {
+        this._setError('');
+        if (!this.hasRealtimeData) {
+          this._setLoading('Reconnecting to live poll...', true);
+        }
+        if (!this.pollRef) {
+          this._initFirebase();
+        }
+        return;
+      }
+
+      this._setLoading('Offline mode: live updates paused.', true);
+      this._setError('You are offline. Live vote sync is unavailable until connection is restored.');
+      this._setButtonsDisabled(true);
+    };
+
+    window.addEventListener('online', applyNetworkState);
+    window.addEventListener('offline', applyNetworkState);
+    applyNetworkState();
   },
 
   _bindButtons() {
@@ -1132,8 +1185,14 @@ const PollSection = {
   },
 
   _initFirebase() {
+    if (!navigator.onLine) {
+      this._setLoading('Offline mode: live updates paused.', true);
+      return;
+    }
+
     if (!window.firebase || !window.firebase.apps) {
       this._setError('Live sync is offline. Add Firebase config to enable real-time polling.');
+      this._setLoading('Live poll is unavailable in this build.', true);
       return;
     }
 
@@ -1150,6 +1209,7 @@ const PollSection = {
     const hasRealConfig = Object.values(firebaseConfig).every((value) => typeof value === 'string' && !value.startsWith('REPLACE_WITH_'));
     if (!hasRealConfig) {
       this._setError('Firebase placeholder config detected. Replace credentials to enable live voting.');
+      this._setLoading('Waiting for Firebase production credentials.', true);
       return;
     }
 
@@ -1158,14 +1218,17 @@ const PollSection = {
       this.db = window.firebase.database(this.app);
       this.pollRef = this.db.ref('polls/info_age_poll');
       this._setError('');
+      this._setLoading('Connecting to realtime results...', true);
       this._listenForResults();
     } catch (error) {
       this._setError('Failed to initialize Firebase poll connection.');
+      this._setLoading('Live poll failed to initialize.', true);
     }
   },
 
   _listenForResults() {
-    if (!this.pollRef) return;
+    if (!this.pollRef || this.isFirebaseListenerBound) return;
+    this.isFirebaseListenerBound = true;
 
     this.pollRef.on('value', (snapshot) => {
       const raw = snapshot && snapshot.val() ? snapshot.val() : {};
@@ -1176,9 +1239,15 @@ const PollSection = {
         normalized[key] = Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
       });
 
+      this.hasRealtimeData = true;
+      this._setLoading('Live results connected.', false);
+      this._setButtonsDisabled(this.hasVoted);
       this._renderResults(normalized);
     }, () => {
       this._setError('Could not read live poll results. Check your Firebase database rules.');
+      this._setLoading('Realtime listener failed. Retrying when available.', true);
+      this.hasRealtimeData = false;
+      this.isFirebaseListenerBound = false;
     });
   },
 
@@ -1194,7 +1263,15 @@ const PollSection = {
       return;
     }
 
+    if (!navigator.onLine) {
+      this._setError('You are offline. Please reconnect before voting.');
+      return;
+    }
+
     this._setError('');
+    this.isSubmitting = true;
+    this._setLoading('Submitting your vote...', true);
+    this._setButtonsDisabled(this.hasVoted);
 
     try {
       const optionRef = this.pollRef.child(key);
@@ -1208,8 +1285,13 @@ const PollSection = {
       localStorage.setItem(this.storageKey, key);
       this._setButtonsDisabled(true);
       this._setConfirmation('Thanks for voting! Your response has been recorded.');
+      this._setLoading('Vote submitted. Waiting for realtime refresh...', true);
     } catch (error) {
       this._setError('Vote failed. Please check your connection and try again.');
+      this._setLoading('Vote submission failed.', true);
+    } finally {
+      this.isSubmitting = false;
+      this._setButtonsDisabled(this.hasVoted);
     }
   },
 
@@ -1602,7 +1684,9 @@ const ConclusionSection = {
   burstLayer: null,
   observer: null,
   hasBurstPlayed: false,
-  reduceMotionQuery: window.matchMedia('(prefers-reduced-motion: reduce)'),
+  reduceMotionQuery: FORCE_MOTION_ALWAYS_ON
+    ? { matches: false, addEventListener: () => {} }
+    : window.matchMedia('(prefers-reduced-motion: reduce)'),
 
   init() {
     this.section = document.getElementById('credits');
@@ -1676,6 +1760,27 @@ const ConclusionSection = {
   }
 };
 
+const NetworkStatus = {
+  banner: null,
+
+  init() {
+    this.banner = document.getElementById('network-banner');
+    if (!this.banner) return;
+
+    const update = () => {
+      if (navigator.onLine) {
+        this.banner.hidden = true;
+        return;
+      }
+      this.banner.hidden = false;
+    };
+
+    window.addEventListener('online', update);
+    window.addEventListener('offline', update);
+    update();
+  }
+};
+
 function updateToggleIcon() {
   const moon = document.getElementById('icon-moon');
   const sun  = document.getElementById('icon-sun');
@@ -1692,6 +1797,10 @@ function updateToggleIcon() {
 
 // ── Initialise on DOM Ready ──────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  const reduceMotion = FORCE_MOTION_ALWAYS_ON
+    ? false
+    : window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   Theme.init();
   RevealObserver.init();
   ScrollProgress.init();
@@ -1703,11 +1812,22 @@ document.addEventListener('DOMContentLoaded', () => {
   PollSection.init();
   InternetSimulator.init();
   ConclusionSection.init();
+  NetworkStatus.init();
   updateToggleIcon();
 
   // Phase 2: Hero
   ParticleCanvas.init();
-  TypeWriter.init();
+
+  if (reduceMotion) {
+    const typedText = document.getElementById('typed-text');
+    const subtitle = document.getElementById('hero-subtitle');
+    const members = document.getElementById('hero-members');
+    if (typedText) typedText.textContent = TypeWriter.phrases[0];
+    if (subtitle) subtitle.classList.add('visible');
+    if (members) members.classList.add('visible');
+  } else {
+    TypeWriter.init();
+  }
 
   const toggleBtn = document.getElementById('theme-toggle');
   if (toggleBtn) {
