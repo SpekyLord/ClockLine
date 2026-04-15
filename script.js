@@ -255,6 +255,38 @@ const ParticleCanvas = {
 };
 
 // ── Scroll Progress Bar ──────────────────────────────────────
+const RevealObserver = {
+  elements: [],
+  observer: null,
+
+  init() {
+    this.elements = Array.from(document.querySelectorAll('.reveal'));
+    if (!this.elements.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+      this.elements.forEach((element) => element.classList.add('visible'));
+      return;
+    }
+
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('visible');
+          this.observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.18,
+        rootMargin: '0px 0px -10% 0px'
+      }
+    );
+
+    this.elements.forEach((element) => this.observer.observe(element));
+  }
+};
+
+// ── Scroll Progress Bar ───────────────────────────────────────
 const ScrollProgress = {
   bar: null,
 
@@ -325,6 +357,7 @@ function updateToggleIcon() {
 // ── Initialise on DOM Ready ──────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   Theme.init();
+  RevealObserver.init();
   ScrollProgress.init();
   NavDots.init();
   updateToggleIcon();
