@@ -1293,9 +1293,90 @@
   <!-- ============================================================
        SECTION 7: LIVE POLL
        ============================================================ -->
-  <!-- TODO: Implement in Phase 8 -->
-  <section id="poll" aria-label="Live audience poll">
-    <p><!-- Phase 8: Live poll UI goes here --></p>
+  <section id="poll" class="poll-section" aria-labelledby="poll-title">
+    <div class="container poll-layout">
+      <div class="poll-heading">
+        <p class="section-label reveal">Live Audience Poll</p>
+        <h2 id="poll-title" class="reveal">Which technology has impacted YOUR life the most?</h2>
+        <p class="poll-intro reveal">
+          Cast one vote from your device, then watch the class results update in real time.
+        </p>
+      </div>
+
+      <div class="poll-grid">
+        <article class="card poll-vote-card reveal" aria-labelledby="poll-vote-title">
+          <h3 id="poll-vote-title">Vote Now</h3>
+          <div class="poll-options" role="group" aria-label="Choose a technology to vote for">
+            <button class="poll-option" type="button" data-poll-vote="smartphone">Smartphone</button>
+            <button class="poll-option" type="button" data-poll-vote="internet">Internet/WWW</button>
+            <button class="poll-option" type="button" data-poll-vote="social_media">Social Media</button>
+            <button class="poll-option" type="button" data-poll-vote="ai">AI (ChatGPT, Claude)</button>
+            <button class="poll-option" type="button" data-poll-vote="streaming">Video Streaming</button>
+          </div>
+          <p class="poll-confirmation" data-poll-confirmation aria-live="polite"></p>
+          <p class="poll-error" data-poll-error aria-live="polite"></p>
+
+          <div class="poll-qr-wrap" aria-label="Share this page by QR code">
+            <p class="poll-qr-title">Scan to join from phone</p>
+            <div class="poll-qr-box" data-poll-qr></div>
+            <a class="poll-qr-link" data-poll-qr-link href="#">Open this page</a>
+          </div>
+
+          <div class="poll-admin" data-poll-admin hidden>
+            <button class="btn-secondary" type="button" data-poll-reset>Reset Poll (Admin)</button>
+          </div>
+        </article>
+
+        <article class="card poll-results-card reveal" aria-labelledby="poll-results-title">
+          <div class="poll-results-head">
+            <h3 id="poll-results-title">Live Results</h3>
+            <p class="poll-total" data-poll-total>0 votes total</p>
+          </div>
+
+          <div class="poll-results-list" data-poll-results>
+            <div class="poll-result" data-poll-result="smartphone">
+              <div class="poll-result-top">
+                <span class="poll-result-name">Smartphone</span>
+                <span class="poll-result-count" data-count>0</span>
+              </div>
+              <div class="poll-result-track"><span class="poll-result-fill" data-fill></span></div>
+            </div>
+
+            <div class="poll-result" data-poll-result="internet">
+              <div class="poll-result-top">
+                <span class="poll-result-name">Internet/WWW</span>
+                <span class="poll-result-count" data-count>0</span>
+              </div>
+              <div class="poll-result-track"><span class="poll-result-fill" data-fill></span></div>
+            </div>
+
+            <div class="poll-result" data-poll-result="social_media">
+              <div class="poll-result-top">
+                <span class="poll-result-name">Social Media</span>
+                <span class="poll-result-count" data-count>0</span>
+              </div>
+              <div class="poll-result-track"><span class="poll-result-fill" data-fill></span></div>
+            </div>
+
+            <div class="poll-result" data-poll-result="ai">
+              <div class="poll-result-top">
+                <span class="poll-result-name">AI</span>
+                <span class="poll-result-count" data-count>0</span>
+              </div>
+              <div class="poll-result-track"><span class="poll-result-fill" data-fill></span></div>
+            </div>
+
+            <div class="poll-result" data-poll-result="streaming">
+              <div class="poll-result-top">
+                <span class="poll-result-name">Video Streaming</span>
+                <span class="poll-result-count" data-count>0</span>
+              </div>
+              <div class="poll-result-track"><span class="poll-result-fill" data-fill></span></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
   </section>
 
   <!-- ============================================================
@@ -1313,6 +1394,11 @@
   <section id="credits" aria-label="Conclusion and credits">
     <p><!-- Phase 10: Conclusion and group credits go here --></p>
   </section>
+
+  <!-- Firebase + QR code dependencies for live poll (Phase 8) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <!-- Main script -->
   <script src="script.js"></script>

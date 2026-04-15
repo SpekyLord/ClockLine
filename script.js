@@ -1006,6 +1006,266 @@ const FutureSection = {
   }
 };
 
+const PollSection = {
+  section: null,
+  buttons: [],
+  resultRows: new Map(),
+  confirmationEl: null,
+  errorEl: null,
+  totalEl: null,
+  adminWrap: null,
+  resetBtn: null,
+  qrWrap: null,
+  qrLink: null,
+  app: null,
+  db: null,
+  pollRef: null,
+  hasVoted: false,
+  votedChoice: null,
+  optionKeys: ['smartphone', 'internet', 'social_media', 'ai', 'streaming'],
+  defaults: {
+    smartphone: 0,
+    internet: 0,
+    social_media: 0,
+    ai: 0,
+    streaming: 0
+  },
+  storageKey: 'info_age_poll_vote',
+
+  init() {
+    this.section = document.getElementById('poll');
+    if (!this.section) return;
+
+    this.buttons = Array.from(this.section.querySelectorAll('[data-poll-vote]'));
+    this.confirmationEl = this.section.querySelector('[data-poll-confirmation]');
+    this.errorEl = this.section.querySelector('[data-poll-error]');
+    this.totalEl = this.section.querySelector('[data-poll-total]');
+    this.adminWrap = this.section.querySelector('[data-poll-admin]');
+    this.resetBtn = this.section.querySelector('[data-poll-reset]');
+    this.qrWrap = this.section.querySelector('[data-poll-qr]');
+    this.qrLink = this.section.querySelector('[data-poll-qr-link]');
+
+    this.section.querySelectorAll('[data-poll-result]').forEach((row) => {
+      const key = row.getAttribute('data-poll-result');
+      if (!key) return;
+      this.resultRows.set(key, {
+        count: row.querySelector('[data-count]'),
+        fill: row.querySelector('[data-fill]')
+      });
+    });
+
+    const storedVote = localStorage.getItem(this.storageKey);
+    if (storedVote && this.optionKeys.includes(storedVote)) {
+      this.hasVoted = true;
+      this.votedChoice = storedVote;
+      this._setConfirmation('Thanks for voting! Your vote is already recorded on this browser.');
+    }
+
+    this._renderQr();
+    this._bindButtons();
+    this._bindAdminReset();
+
+    this._initFirebase();
+    this._renderResults(this.defaults);
+  },
+
+  _setConfirmation(message) {
+    if (this.confirmationEl) {
+      this.confirmationEl.textContent = message;
+    }
+  },
+
+  _setError(message) {
+    if (this.errorEl) {
+      this.errorEl.textContent = message;
+    }
+  },
+
+  _setButtonsDisabled(disabled) {
+    this.buttons.forEach((button) => {
+      button.disabled = disabled;
+      button.setAttribute('aria-disabled', String(disabled));
+      const key = button.getAttribute('data-poll-vote');
+      button.classList.toggle('is-selected', Boolean(this.votedChoice) && key === this.votedChoice);
+    });
+  },
+
+  _bindButtons() {
+    this._setButtonsDisabled(this.hasVoted);
+
+    this.buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const key = button.getAttribute('data-poll-vote');
+        if (!key) return;
+        this._submitVote(key);
+      });
+    });
+  },
+
+  _bindAdminReset() {
+    const params = new URLSearchParams(window.location.search);
+    const isAdmin = params.get('admin') === 'true';
+
+    if (this.adminWrap) {
+      this.adminWrap.hidden = !isAdmin;
+    }
+
+    if (!isAdmin || !this.resetBtn) return;
+
+    this.resetBtn.addEventListener('click', async () => {
+      if (!this.pollRef) {
+        this._setError('Cannot reset poll yet. Firebase is not initialized.');
+        return;
+      }
+
+      const confirmed = window.confirm('Reset poll results to zero for all options?');
+      if (!confirmed) return;
+
+      try {
+        await this.pollRef.set({ ...this.defaults });
+        this._setError('');
+        this._setConfirmation('Poll has been reset by admin.');
+      } catch (error) {
+        this._setError('Failed to reset poll. Please try again.');
+      }
+    });
+  },
+
+  _initFirebase() {
+    if (!window.firebase || !window.firebase.apps) {
+      this._setError('Live sync is offline. Add Firebase config to enable real-time polling.');
+      return;
+    }
+
+    const firebaseConfig = {
+      apiKey: 'REPLACE_WITH_FIREBASE_API_KEY',
+      authDomain: 'REPLACE_WITH_FIREBASE_AUTH_DOMAIN',
+      databaseURL: 'REPLACE_WITH_FIREBASE_DATABASE_URL',
+      projectId: 'REPLACE_WITH_FIREBASE_PROJECT_ID',
+      storageBucket: 'REPLACE_WITH_FIREBASE_STORAGE_BUCKET',
+      messagingSenderId: 'REPLACE_WITH_FIREBASE_MESSAGING_SENDER_ID',
+      appId: 'REPLACE_WITH_FIREBASE_APP_ID'
+    };
+
+    const hasRealConfig = Object.values(firebaseConfig).every((value) => typeof value === 'string' && !value.startsWith('REPLACE_WITH_'));
+    if (!hasRealConfig) {
+      this._setError('Firebase placeholder config detected. Replace credentials to enable live voting.');
+      return;
+    }
+
+    try {
+      this.app = window.firebase.apps.length ? window.firebase.app() : window.firebase.initializeApp(firebaseConfig);
+      this.db = window.firebase.database(this.app);
+      this.pollRef = this.db.ref('polls/info_age_poll');
+      this._setError('');
+      this._listenForResults();
+    } catch (error) {
+      this._setError('Failed to initialize Firebase poll connection.');
+    }
+  },
+
+  _listenForResults() {
+    if (!this.pollRef) return;
+
+    this.pollRef.on('value', (snapshot) => {
+      const raw = snapshot && snapshot.val() ? snapshot.val() : {};
+      const normalized = { ...this.defaults };
+
+      this.optionKeys.forEach((key) => {
+        const value = Number(raw[key]);
+        normalized[key] = Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
+      });
+
+      this._renderResults(normalized);
+    }, () => {
+      this._setError('Could not read live poll results. Check your Firebase database rules.');
+    });
+  },
+
+  async _submitVote(key) {
+    if (!this.optionKeys.includes(key)) return;
+    if (this.hasVoted) {
+      this._setConfirmation('Thanks! You already voted from this browser.');
+      return;
+    }
+
+    if (!this.pollRef) {
+      this._setError('Voting is unavailable until Firebase credentials are configured.');
+      return;
+    }
+
+    this._setError('');
+
+    try {
+      const optionRef = this.pollRef.child(key);
+      await optionRef.transaction((current) => {
+        const base = Number(current);
+        return Number.isFinite(base) ? base + 1 : 1;
+      });
+
+      this.hasVoted = true;
+      this.votedChoice = key;
+      localStorage.setItem(this.storageKey, key);
+      this._setButtonsDisabled(true);
+      this._setConfirmation('Thanks for voting! Your response has been recorded.');
+    } catch (error) {
+      this._setError('Vote failed. Please check your connection and try again.');
+    }
+  },
+
+  _renderResults(results) {
+    const total = this.optionKeys.reduce((sum, key) => sum + (results[key] || 0), 0);
+
+    this.optionKeys.forEach((key) => {
+      const row = this.resultRows.get(key);
+      if (!row) return;
+
+      const count = results[key] || 0;
+      const pct = total > 0 ? (count / total) * 100 : 0;
+
+      if (row.count) {
+        row.count.textContent = String(count);
+      }
+
+      if (row.fill) {
+        row.fill.style.width = `${pct.toFixed(1)}%`;
+      }
+    });
+
+    if (this.totalEl) {
+      this.totalEl.textContent = `${total} vote${total === 1 ? '' : 's'} total`;
+    }
+  },
+
+  _renderQr() {
+    const url = window.location.href;
+
+    if (this.qrLink) {
+      this.qrLink.href = url;
+      this.qrLink.textContent = url;
+    }
+
+    if (!this.qrWrap || typeof window.QRCode === 'undefined') {
+      return;
+    }
+
+    this.qrWrap.innerHTML = '';
+
+    try {
+      new window.QRCode(this.qrWrap, {
+        text: url,
+        width: 120,
+        height: 120,
+        colorDark: '#0a0a0f',
+        colorLight: '#ffffff',
+        correctLevel: window.QRCode.CorrectLevel.M
+      });
+    } catch (error) {
+      this._setError('QR code generation failed. Use the page link below instead.');
+    }
+  }
+};
+
 function updateToggleIcon() {
   const moon = document.getElementById('icon-moon');
   const sun  = document.getElementById('icon-sun');
@@ -1030,6 +1290,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ImpactSection.init();
   ChallengesSection.init();
   FutureSection.init();
+  PollSection.init();
   updateToggleIcon();
 
   // Phase 2: Hero

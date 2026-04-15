@@ -1630,6 +1630,224 @@ section {
   }
 }
 
+/* —— Section 7: Live Poll ———————————————————————————————— */
+.poll-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 10% 20%, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 34%),
+    radial-gradient(circle at 90% 80%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 36%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 82%, #06131f), color-mix(in srgb, var(--color-bg) 95%, #05070d));
+}
+
+.poll-layout {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.poll-heading {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 760px;
+}
+
+.poll-heading h2 {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  max-width: 13ch;
+}
+
+.poll-intro {
+  color: var(--color-text-secondary);
+  max-width: 60ch;
+}
+
+.poll-grid {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.poll-vote-card,
+.poll-results-card {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.poll-vote-card h3,
+.poll-results-card h3 {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+}
+
+.poll-options {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.poll-option {
+  border: 1px solid color-mix(in srgb, var(--color-primary) 24%, transparent);
+  border-radius: 0.7rem;
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  color: var(--color-text-primary);
+  font-family: var(--font-heading);
+  font-size: 0.98rem;
+  font-weight: 500;
+  padding: 0.85rem 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--duration-hover) var(--easing),
+    border-color var(--duration-hover) var(--easing),
+    box-shadow var(--duration-hover) var(--easing),
+    background-color var(--duration-hover) var(--easing),
+    opacity var(--duration-hover) var(--easing);
+}
+
+.poll-option:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-primary) 44%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.poll-option:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.poll-option.is-selected {
+  border-color: transparent;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 22%, transparent), color-mix(in srgb, var(--color-accent) 20%, transparent));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-primary) 16%, transparent);
+}
+
+.poll-confirmation {
+  min-height: 1.4em;
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.poll-error {
+  min-height: 1.3em;
+  color: #ff6b8b;
+  font-size: 0.92rem;
+}
+
+.poll-qr-wrap {
+  margin-top: 0.35rem;
+  padding: 0.85rem;
+  border-radius: 0.85rem;
+  border: 1px dashed color-mix(in srgb, var(--color-primary) 28%, transparent);
+  background: color-mix(in srgb, var(--color-bg) 22%, transparent);
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+}
+
+.poll-qr-title {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.poll-qr-box {
+  width: 132px;
+  min-height: 132px;
+  display: grid;
+  place-items: center;
+  border-radius: 0.65rem;
+  background-color: #ffffff;
+  padding: 0.45rem;
+}
+
+.poll-qr-box img,
+.poll-qr-box canvas {
+  width: 100%;
+  height: auto;
+}
+
+.poll-qr-link {
+  color: var(--color-primary);
+  font-size: 0.88rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-all;
+}
+
+.poll-admin {
+  margin-top: 0.35rem;
+}
+
+.poll-results-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.poll-total {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+}
+
+.poll-results-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.poll-result {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.poll-result-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.poll-result-name {
+  font-size: 0.96rem;
+}
+
+.poll-result-count {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.poll-result-track {
+  width: 100%;
+  height: 0.68rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-bg) 42%, transparent);
+  overflow: hidden;
+}
+
+.poll-result-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  transition: width 450ms var(--easing);
+}
+
+@media (min-width: 900px) {
+  .poll-layout {
+    gap: 1.85rem;
+  }
+
+  .poll-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .poll-vote-card,
+  .poll-results-card {
+    min-height: 100%;
+  }
+}
+
 .container {
   max-width: 1280px;
   margin-left: auto;
