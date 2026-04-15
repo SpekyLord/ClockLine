@@ -159,9 +159,9 @@ const ParticleCanvas = {
   },
 
   _bindEvents() {
-    // Track mouse position relative to the canvas
     const hero = document.getElementById('hero');
     if (hero) {
+      // Mouse
       hero.addEventListener('mousemove', (e) => {
         const rect = this.canvas.getBoundingClientRect();
         this.mouse.x = e.clientX - rect.left;
@@ -171,6 +171,26 @@ const ParticleCanvas = {
         this.mouse.x = null;
         this.mouse.y = null;
       });
+
+      // Touch — use first touch point to drive the same mouse pull effect
+      hero.addEventListener('touchstart', (e) => {
+        const t = e.touches[0];
+        if (!t) return;
+        const rect = this.canvas.getBoundingClientRect();
+        this.mouse.x = t.clientX - rect.left;
+        this.mouse.y = t.clientY - rect.top;
+      }, { passive: true });
+      hero.addEventListener('touchmove', (e) => {
+        const t = e.touches[0];
+        if (!t) return;
+        const rect = this.canvas.getBoundingClientRect();
+        this.mouse.x = t.clientX - rect.left;
+        this.mouse.y = t.clientY - rect.top;
+      }, { passive: true });
+      hero.addEventListener('touchend', () => {
+        this.mouse.x = null;
+        this.mouse.y = null;
+      }, { passive: true });
     }
 
     // Resize with debounce
