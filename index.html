@@ -826,9 +826,161 @@
   <!-- ============================================================
        SECTION 4: IMPACT ON QUALITY OF LIFE
        ============================================================ -->
-  <!-- TODO: Implement in Phase 5 -->
-  <section id="impact" aria-label="Impact on quality of life">
-    <p><!-- Phase 5: Impact quadrant grid goes here --></p>
+  <section id="impact" class="impact-section" aria-labelledby="impact-title">
+    <div class="container impact-layout">
+      <div class="impact-heading">
+        <p class="section-label reveal">Quality of Life</p>
+        <h2 id="impact-title" class="reveal">How the Information Age changed everyday life</h2>
+        <p class="impact-intro reveal">
+          Digital systems now shape care, learning, jobs, and relationships in ways that feel immediate, personal,
+          and impossible to separate from daily routines.
+        </p>
+      </div>
+
+      <div class="impact-grid" aria-label="Four quality-of-life impact areas">
+        <article class="impact-card reveal" data-impact-card data-impact-title="Health" style="--reveal-delay: 0ms;">
+          <button class="impact-card-toggle" type="button" data-impact-toggle aria-pressed="false" aria-label="Flip Health card to see details">
+            <span class="impact-card-scene">
+              <span class="impact-card-face impact-card-front" data-impact-face="front">
+                <span class="impact-card-topline">
+                  <span class="impact-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation">
+                      <path d="M4 12h3l2-4 3 8 2-4h6"/>
+                      <path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/>
+                    </svg>
+                  </span>
+                  <span class="impact-card-hint">Tap to flip</span>
+                </span>
+                <span class="impact-card-copy">
+                  <span id="impact-health-title" class="impact-card-title">Health</span>
+                  <span class="impact-card-tagline">Care can travel faster, listen longer, and reach people beyond the clinic.</span>
+                </span>
+              </span>
+
+              <span class="impact-card-face impact-card-back" data-impact-face="back" aria-hidden="true">
+                <span class="impact-card-topline">
+                  <span class="impact-card-back-label">Health impact</span>
+                  <span class="impact-card-hint">Tap again to return</span>
+                </span>
+                <span class="impact-card-bullets" role="list" aria-label="Health details">
+                  <span role="listitem">Telemedicine visits move consultations online, reducing travel time for follow-ups and remote care.</span>
+                  <span role="listitem">Wearables collect 24/7 signals like heart rate, sleep, and activity between appointments.</span>
+                  <span role="listitem">AI-assisted diagnostics help flag patterns in scans and records for faster review.</span>
+                  <span role="listitem">Examples: telehealth apps, smartwatches, and digital prescription systems.</span>
+                </span>
+              </span>
+            </span>
+          </button>
+        </article>
+
+        <article class="impact-card reveal" data-impact-card data-impact-title="Education" style="--reveal-delay: 100ms;">
+          <button class="impact-card-toggle" type="button" data-impact-toggle aria-pressed="false" aria-label="Flip Education card to see details">
+            <span class="impact-card-scene">
+              <span class="impact-card-face impact-card-front" data-impact-face="front">
+                <span class="impact-card-topline">
+                  <span class="impact-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation">
+                      <path d="M3 8.5 12 4l9 4.5L12 13 3 8.5z"/>
+                      <path d="M7 10.5V15c0 1.5 2.24 3 5 3s5-1.5 5-3v-4.5"/>
+                      <path d="M21 8.5V15"/>
+                    </svg>
+                  </span>
+                  <span class="impact-card-hint">Tap to flip</span>
+                </span>
+                <span class="impact-card-copy">
+                  <span id="impact-education-title" class="impact-card-title">Education</span>
+                  <span class="impact-card-tagline">Lessons now reach thousands at once and stay available long after class ends.</span>
+                </span>
+              </span>
+
+              <span class="impact-card-face impact-card-back" data-impact-face="back" aria-hidden="true">
+                <span class="impact-card-topline">
+                  <span class="impact-card-back-label">Education impact</span>
+                  <span class="impact-card-hint">Tap again to return</span>
+                </span>
+                <span class="impact-card-bullets" role="list" aria-label="Education details">
+                  <span role="listitem">One online course can serve thousands of learners through MOOCs and recorded platforms.</span>
+                  <span role="listitem">Students get 24/7 access to replays, notes, and explainers instead of one-time lectures only.</span>
+                  <span role="listitem">AI tutors can respond in seconds with personalized practice and feedback.</span>
+                  <span role="listitem">Examples: Coursera, Khan Academy, Google Classroom, and adaptive learning apps.</span>
+                </span>
+              </span>
+            </span>
+          </button>
+        </article>
+
+        <article class="impact-card reveal" data-impact-card data-impact-title="Work" style="--reveal-delay: 200ms;">
+          <button class="impact-card-toggle" type="button" data-impact-toggle aria-pressed="false" aria-label="Flip Work card to see details">
+            <span class="impact-card-scene">
+              <span class="impact-card-face impact-card-front" data-impact-face="front">
+                <span class="impact-card-topline">
+                  <span class="impact-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation">
+                      <path d="M3 8h18v11H3z"/>
+                      <path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                      <path d="M3 12h18"/>
+                    </svg>
+                  </span>
+                  <span class="impact-card-hint">Tap to flip</span>
+                </span>
+                <span class="impact-card-copy">
+                  <span id="impact-work-title" class="impact-card-title">Work</span>
+                  <span class="impact-card-tagline">Jobs became more connected, more automated, and more flexible across distance.</span>
+                </span>
+              </span>
+
+              <span class="impact-card-face impact-card-back" data-impact-face="back" aria-hidden="true">
+                <span class="impact-card-topline">
+                  <span class="impact-card-back-label">Work impact</span>
+                  <span class="impact-card-hint">Tap again to return</span>
+                </span>
+                <span class="impact-card-bullets" role="list" aria-label="Work details">
+                  <span role="listitem">Cloud tools let teams co-edit documents in real time across cities and time zones.</span>
+                  <span role="listitem">Automation can finish repetitive digital tasks in seconds instead of hours of manual entry.</span>
+                  <span role="listitem">Gig platforms turned phones into job marketplaces for drivers, freelancers, and creators.</span>
+                  <span role="listitem">Examples: remote work dashboards, online freelancing, and workflow bots.</span>
+                </span>
+              </span>
+            </span>
+          </button>
+        </article>
+
+        <article class="impact-card reveal" data-impact-card data-impact-title="Communication" style="--reveal-delay: 300ms;">
+          <button class="impact-card-toggle" type="button" data-impact-toggle aria-pressed="false" aria-label="Flip Communication card to see details">
+            <span class="impact-card-scene">
+              <span class="impact-card-face impact-card-front" data-impact-face="front">
+                <span class="impact-card-topline">
+                  <span class="impact-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation">
+                      <path d="M4 5h16v10H8l-4 4V5z"/>
+                      <path d="M9 9h6M9 12h4"/>
+                    </svg>
+                  </span>
+                  <span class="impact-card-hint">Tap to flip</span>
+                </span>
+                <span class="impact-card-copy">
+                  <span id="impact-communication-title" class="impact-card-title">Communication</span>
+                  <span class="impact-card-tagline">Messages, calls, and communities now move at the speed of the network.</span>
+                </span>
+              </span>
+
+              <span class="impact-card-face impact-card-back" data-impact-face="back" aria-hidden="true">
+                <span class="impact-card-topline">
+                  <span class="impact-card-back-label">Communication impact</span>
+                  <span class="impact-card-hint">Tap again to return</span>
+                </span>
+                <span class="impact-card-bullets" role="list" aria-label="Communication details">
+                  <span role="listitem">A message can cross the world in seconds instead of taking days or weeks.</span>
+                  <span role="listitem">Video calls let families, classrooms, and teams meet face to face from different locations.</span>
+                  <span role="listitem">Social platforms can amplify one post to millions almost instantly.</span>
+                  <span role="listitem">Examples: group chats, livestreams, voice notes, and always-on online communities.</span>
+                </span>
+              </span>
+            </span>
+          </button>
+        </article>
+      </div>
+    </div>
   </section>
 
   <!-- ============================================================

@@ -512,6 +512,109 @@ const TimelineSection = {
   }
 };
 
+const ImpactSection = {
+  section: null,
+  cards: [],
+
+  init() {
+    this.section = document.getElementById('impact');
+    if (!this.section) return;
+
+    this.cards = Array.from(this.section.querySelectorAll('[data-impact-card]'));
+    if (!this.cards.length) return;
+
+    this._bindCards();
+    this._bindKeyboard();
+  },
+
+  _getToggle(card) {
+    return card.querySelector('[data-impact-toggle]');
+  },
+
+  _setFaceVisibility(card, isFlipped) {
+    const front = card.querySelector('[data-impact-face="front"]');
+    const back = card.querySelector('[data-impact-face="back"]');
+
+    if (front) {
+      front.setAttribute('aria-hidden', isFlipped ? 'true' : 'false');
+    }
+
+    if (back) {
+      back.setAttribute('aria-hidden', isFlipped ? 'false' : 'true');
+    }
+  },
+
+  _updateLabel(card, isFlipped) {
+    const toggle = this._getToggle(card);
+    if (!toggle) return;
+
+    const title = card.dataset.impactTitle || 'impact';
+    const label = isFlipped
+      ? `Show front of ${title} card`
+      : `Flip ${title} card to see details`;
+
+    toggle.setAttribute('aria-label', label);
+  },
+
+  _bindCards() {
+    this.cards.forEach((card) => {
+      const toggle = this._getToggle(card);
+      if (!toggle) return;
+
+      this._setFaceVisibility(card, false);
+      this._updateLabel(card, false);
+
+      toggle.addEventListener('click', () => {
+        this.toggleCard(card);
+      });
+    });
+  },
+
+  _bindKeyboard() {
+    this.section.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+
+      const target = event.target instanceof Element ? event.target : null;
+      const activeCard = target ? target.closest('[data-impact-card]') : null;
+
+      if (activeCard && activeCard.classList.contains('is-flipped')) {
+        event.preventDefault();
+        this.closeCard(activeCard);
+      }
+    });
+  },
+
+  toggleCard(card) {
+    if (card.classList.contains('is-flipped')) {
+      this.closeCard(card);
+      return;
+    }
+
+    this.openCard(card);
+  },
+
+  openCard(card) {
+    const toggle = this._getToggle(card);
+    if (!toggle) return;
+
+    card.classList.add('is-flipped');
+    toggle.setAttribute('aria-pressed', 'true');
+    this._setFaceVisibility(card, true);
+    this._updateLabel(card, true);
+  },
+
+  closeCard(card) {
+    const toggle = this._getToggle(card);
+    if (!toggle) return;
+
+    card.classList.remove('is-flipped');
+    toggle.setAttribute('aria-pressed', 'false');
+    this._setFaceVisibility(card, false);
+    this._updateLabel(card, false);
+    toggle.focus();
+  }
+};
+
 function updateToggleIcon() {
   const moon = document.getElementById('icon-moon');
   const sun  = document.getElementById('icon-sun');
@@ -533,6 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ScrollProgress.init();
   NavDots.init();
   TimelineSection.init();
+  ImpactSection.init();
   updateToggleIcon();
 
   // Phase 2: Hero

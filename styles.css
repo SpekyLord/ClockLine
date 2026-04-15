@@ -806,6 +806,233 @@ section {
   }
 }
 
+/* ── Section 4: Impact on Quality of Life ───────────────────── */
+.impact-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 34%),
+    radial-gradient(circle at 85% 20%, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 32%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 92%, #060d15), color-mix(in srgb, var(--color-bg) 86%, #120714));
+}
+
+.impact-layout {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.impact-heading {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 780px;
+}
+
+.impact-heading h2 {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  max-width: 10ch;
+}
+
+.impact-intro {
+  color: var(--color-text-secondary);
+  max-width: 62ch;
+}
+
+.impact-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.impact-card {
+  position: relative;
+  min-height: 21rem;
+  transition: transform var(--duration-hover) var(--easing);
+}
+
+.impact-card-toggle {
+  width: 100%;
+  min-height: 21rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  perspective: 1400px;
+}
+
+.impact-card-scene {
+  position: relative;
+  display: block;
+  min-height: 21rem;
+  transform-style: preserve-3d;
+  transition: transform 700ms var(--easing);
+  will-change: transform;
+}
+
+.impact-card.is-flipped .impact-card-scene {
+  transform: rotateY(180deg);
+}
+
+.impact-card-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 1.35rem;
+  padding: 1.35rem;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 16%, transparent);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 48%),
+    color-mix(in srgb, var(--color-surface) 94%, transparent);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 12%, transparent),
+    0 24px 44px color-mix(in srgb, var(--color-primary) 8%, transparent);
+  transition:
+    border-color var(--duration-hover) var(--easing),
+    box-shadow var(--duration-hover) var(--easing),
+    background-color var(--duration-hover) var(--easing);
+}
+
+.impact-card-back {
+  transform: rotateY(180deg);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 46%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 98%, transparent), color-mix(in srgb, var(--color-surface) 92%, transparent));
+}
+
+.impact-card-topline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.impact-card-icon {
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.95rem;
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-bg) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.impact-card-icon svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.impact-card-hint,
+.impact-card-back-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.impact-card-hint {
+  color: var(--color-text-secondary);
+}
+
+.impact-card-back-label {
+  color: var(--color-accent);
+}
+
+.impact-card-copy {
+  align-self: end;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.impact-card-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.65rem, 4vw, 2.35rem);
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.impact-card-tagline {
+  color: var(--color-text-secondary);
+  max-width: 28ch;
+}
+
+.impact-card-bullets {
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
+}
+
+.impact-card-bullets > span {
+  position: relative;
+  padding-left: 1.15rem;
+  color: var(--color-text-secondary);
+}
+
+.impact-card-bullets > span::before {
+  content: "";
+  position: absolute;
+  top: 0.6rem;
+  left: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.impact-card.is-flipped .impact-card-back {
+  border-color: color-mix(in srgb, var(--color-accent) 36%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 12%, transparent),
+    0 28px 48px color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+@media (hover: hover) {
+  .impact-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .impact-card:hover .impact-card-face {
+    border-color: color-mix(in srgb, var(--color-primary) 34%, transparent);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 12%, transparent),
+      0 0 26px color-mix(in srgb, var(--color-primary) 12%, transparent);
+  }
+
+  .impact-card:hover .impact-card-icon {
+    box-shadow: 0 0 26px color-mix(in srgb, var(--color-primary) 18%, transparent);
+  }
+}
+
+@media (min-width: 768px) {
+  .impact-layout {
+    gap: 1.75rem;
+  }
+
+  .impact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .impact-card,
+  .impact-card-toggle,
+  .impact-card-scene {
+    min-height: 21.75rem;
+  }
+}
+
 /* ── Utility: Container ─────────────────────────────────────── */
 .container {
   max-width: 1280px;
