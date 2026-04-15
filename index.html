@@ -1136,8 +1136,158 @@
        SECTION 6: THE FUTURE (2030–2050)
        ============================================================ -->
   <!-- TODO: Implement in Phase 7 -->
-  <section id="future" aria-label="The future of the Information Age">
-    <p><!-- Phase 7: Future predictions go here --></p>
+  <section id="future" class="future-section" aria-labelledby="future-title">
+    <div class="future-backdrop" aria-hidden="true">
+      <span class="future-layer future-layer-halo" data-future-layer="halo"></span>
+      <span class="future-layer future-layer-orbit" data-future-layer="orbit"></span>
+      <span class="future-layer future-layer-grid" data-future-layer="grid"></span>
+    </div>
+
+    <div class="container future-layout">
+      <div class="future-heading">
+        <p class="section-label reveal">2030 to 2050</p>
+        <h2 id="future-title" class="reveal">What the next wave of technology might feel like</h2>
+        <p class="future-intro reveal">
+          These forecasts are not promises. They are plausible directions based on trends already forming in research,
+          infrastructure, and applied AI.
+        </p>
+      </div>
+
+      <div class="future-grid" aria-label="Five future technology predictions">
+        <article class="card future-card reveal" data-future-card style="--reveal-delay: 0ms;">
+          <button class="future-card-toggle" type="button" data-future-toggle aria-expanded="false" aria-controls="future-quantum-panel">
+            <div class="future-card-meta">
+              <span class="future-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <circle cx="12" cy="12" r="2.5"/>
+                  <ellipse cx="12" cy="12" rx="8" ry="3.5"/>
+                  <ellipse cx="12" cy="12" rx="3.5" ry="8" transform="rotate(35 12 12)"/>
+                  <ellipse cx="12" cy="12" rx="3.5" ry="8" transform="rotate(-35 12 12)"/>
+                </svg>
+              </span>
+              <span class="future-card-eta">2030s+</span>
+            </div>
+            <div class="future-card-copy">
+              <h3>Quantum Computing</h3>
+              <p>Specialized breakthroughs may first help with science, logistics, and materials problems that are hard for classical systems.</p>
+            </div>
+            <span class="future-card-chevron" aria-hidden="true">+</span>
+          </button>
+          <div class="future-card-panel" data-future-panel id="future-quantum-panel" aria-hidden="true">
+            <div class="future-card-panel-inner">
+              <p><span>What it is</span> Placeholder direction: quantum machines process certain classes of problems differently, with early value likely focused on narrow, high-cost research tasks.</p>
+              <p><span>Why it matters</span> Placeholder direction: through the 2030s, impact may show up first in simulations, optimization, and discovery rather than everyday consumer devices.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card future-card reveal" data-future-card style="--reveal-delay: 100ms;">
+          <button class="future-card-toggle" type="button" data-future-toggle aria-expanded="false" aria-controls="future-bci-panel">
+            <div class="future-card-meta">
+              <span class="future-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <path d="M8 18c-2.5-1.2-4-3.8-4-6.5C4 7.4 7.4 4 11.5 4c3.3 0 6.1 2.1 7.1 5"/>
+                  <path d="M14 9c1.8.5 3 2.1 3 4.1 0 2.4-2 4.4-4.4 4.4H11"/>
+                  <path d="M10 9h4M10 12h5M10 15h4"/>
+                  <path d="M7 9v7"/>
+                </svg>
+              </span>
+              <span class="future-card-eta">2030s</span>
+            </div>
+            <div class="future-card-copy">
+              <h3>Brain-Computer Interfaces</h3>
+              <p>Medical-first progress could expand how people restore movement, communication, or control with direct neural input.</p>
+            </div>
+            <span class="future-card-chevron" aria-hidden="true">+</span>
+          </button>
+          <div class="future-card-panel" data-future-panel id="future-bci-panel" aria-hidden="true">
+            <div class="future-card-panel-inner">
+              <p><span>What it is</span> Placeholder direction: BCIs connect neural signals to software or hardware, with early value focused on accessibility, assistive control, and clinical recovery.</p>
+              <p><span>Why it matters</span> Placeholder direction: the 2030s may bring stronger medical use cases, while broad consumer adoption remains uncertain and ethically sensitive.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card future-card reveal" data-future-card style="--reveal-delay: 200ms;">
+          <button class="future-card-toggle" type="button" data-future-toggle aria-expanded="false" aria-controls="future-agi-panel">
+            <div class="future-card-meta">
+              <span class="future-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <rect x="7" y="7" width="10" height="10" rx="2"/>
+                  <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.5 5.5l1.4 1.4M17.1 17.1l1.4 1.4M18.5 5.5l-1.4 1.4M6.9 17.1l-1.4 1.4"/>
+                  <path d="M10 10h4v4h-4z"/>
+                </svg>
+              </span>
+              <span class="future-card-eta">Speculative</span>
+            </div>
+            <div class="future-card-copy">
+              <h3>Artificial General Intelligence</h3>
+              <p>AGI remains speculative, but the conversation now centers on whether systems could eventually reason across many domains, not just one.</p>
+            </div>
+            <span class="future-card-chevron" aria-hidden="true">+</span>
+          </button>
+          <div class="future-card-panel" data-future-panel id="future-agi-panel" aria-hidden="true">
+            <div class="future-card-panel-inner">
+              <p><span>What it is</span> Placeholder direction: AGI describes a system with broad, flexible capability closer to general problem-solving than today’s narrower task-specific models.</p>
+              <p><span>Why it matters</span> Placeholder direction: if major research milestones happen in the 2030s or later, the social impact could be much larger than ordinary software upgrades.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card future-card reveal" data-future-card style="--reveal-delay: 300ms;">
+          <button class="future-card-toggle" type="button" data-future-toggle aria-expanded="false" aria-controls="future-space-internet-panel">
+            <div class="future-card-meta">
+              <span class="future-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <path d="M4 15c3-6 8-10 16-11-1 8-5 13-11 16"/>
+                  <path d="M9 10l5 5"/>
+                  <path d="M5 19c2.5-1 4.5-3 5.5-5.5"/>
+                  <circle cx="17.5" cy="6.5" r="1"/>
+                </svg>
+              </span>
+              <span class="future-card-eta">2030s</span>
+            </div>
+            <div class="future-card-copy">
+              <h3>Space Internet</h3>
+              <p>Orbiting networks may widen global coverage, while lunar communication becomes an early test for long-range digital infrastructure.</p>
+            </div>
+            <span class="future-card-chevron" aria-hidden="true">+</span>
+          </button>
+          <div class="future-card-panel" data-future-panel id="future-space-internet-panel" aria-hidden="true">
+            <div class="future-card-panel-inner">
+              <p><span>What it is</span> Placeholder direction: space-based internet extends connectivity using satellite constellations, inter-satellite links, and eventually off-world relay systems.</p>
+              <p><span>Why it matters</span> Placeholder direction: the 2030s may bring broader remote coverage on Earth, while lunar networking acts as a frontier use case rather than a mass-market service.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card future-card reveal" data-future-card style="--reveal-delay: 400ms;">
+          <button class="future-card-toggle" type="button" data-future-toggle aria-expanded="false" aria-controls="future-climate-tech-panel">
+            <div class="future-card-meta">
+              <span class="future-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <path d="M12 20c4 0 7-3.1 7-7 0-4.2-3.7-7.3-7-9-3.3 1.7-7 4.8-7 9 0 3.9 3 7 7 7z"/>
+                  <path d="M12 8v7"/>
+                  <path d="M9.5 12.5 12 15l2.5-2.5"/>
+                </svg>
+              </span>
+              <span class="future-card-eta">Now to 2030s</span>
+            </div>
+            <div class="future-card-copy">
+              <h3>AI-driven Climate Tech</h3>
+              <p>AI is already helping model energy, weather, and infrastructure, with broader optimization likely as systems scale through the 2030s.</p>
+            </div>
+            <span class="future-card-chevron" aria-hidden="true">+</span>
+          </button>
+          <div class="future-card-panel" data-future-panel id="future-climate-tech-panel" aria-hidden="true">
+            <div class="future-card-panel-inner">
+              <p><span>What it is</span> Placeholder direction: climate-focused AI can support forecasting, grid balancing, resource planning, and faster interpretation of environmental data.</p>
+              <p><span>Why it matters</span> Placeholder direction: unlike more distant predictions, this one is already emerging and may see broader deployment well before 2050.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
   </section>
 
   <!-- ============================================================

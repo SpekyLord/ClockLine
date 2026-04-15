@@ -1359,6 +1359,277 @@ section {
 }
 
 /* ── Utility: Container ─────────────────────────────────────── */
+/* —— Section 6: The Future ———————————————————————————————— */
+.future-section {
+  --future-layer-1-x: 0px;
+  --future-layer-1-y: 0px;
+  --future-layer-2-x: 0px;
+  --future-layer-2-y: 0px;
+  --future-layer-3-x: 0px;
+  --future-layer-3-y: 0px;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 14% 18%, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 28%),
+    radial-gradient(circle at 85% 24%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 32%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 80%, #04101c), color-mix(in srgb, var(--color-bg) 94%, #070711));
+}
+
+.future-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.future-layer {
+  position: absolute;
+  opacity: 0.75;
+  will-change: transform;
+  transition: transform 220ms linear;
+}
+
+.future-layer-halo {
+  top: 6%;
+  right: -8%;
+  width: clamp(16rem, 34vw, 34rem);
+  height: clamp(16rem, 34vw, 34rem);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 35%, color-mix(in srgb, var(--color-primary) 32%, transparent), transparent 36%),
+    radial-gradient(circle at 65% 60%, color-mix(in srgb, var(--color-accent) 26%, transparent), transparent 42%);
+  filter: blur(10px);
+  transform: translate3d(var(--future-layer-1-x), var(--future-layer-1-y), 0);
+}
+
+.future-layer-orbit {
+  left: -5rem;
+  bottom: 6%;
+  width: clamp(14rem, 28vw, 24rem);
+  height: clamp(14rem, 28vw, 24rem);
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 22%, transparent);
+  box-shadow:
+    inset 0 0 24px color-mix(in srgb, var(--color-primary) 10%, transparent),
+    0 0 28px color-mix(in srgb, var(--color-primary) 8%, transparent);
+  transform: translate3d(var(--future-layer-2-x), var(--future-layer-2-y), 0);
+}
+
+.future-layer-orbit::before,
+.future-layer-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 14%;
+  border-radius: inherit;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+.future-layer-orbit::after {
+  inset: 28%;
+  border-color: color-mix(in srgb, var(--color-primary) 18%, transparent);
+}
+
+.future-layer-grid {
+  inset: auto 0 0 0;
+  height: 42%;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-primary) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-primary) 8%, transparent) 1px, transparent 1px);
+  background-size: 2.4rem 2.4rem;
+  mask-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.85) 18%, rgba(0, 0, 0, 1));
+  opacity: 0.26;
+  transform: perspective(900px) rotateX(68deg) translate3d(var(--future-layer-3-x), var(--future-layer-3-y), 0);
+  transform-origin: center bottom;
+}
+
+.future-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1.55rem;
+}
+
+.future-heading {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 780px;
+}
+
+.future-heading h2 {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  max-width: 11ch;
+}
+
+.future-intro {
+  color: var(--color-text-secondary);
+  max-width: 62ch;
+}
+
+.future-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.future-card {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 40%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 98%, transparent), color-mix(in srgb, var(--color-surface) 92%, transparent));
+  backdrop-filter: blur(14px);
+  transition:
+    transform var(--duration-hover) var(--easing),
+    border-color var(--duration-hover) var(--easing),
+    box-shadow var(--duration-hover) var(--easing);
+}
+
+.future-card.is-open {
+  border-color: color-mix(in srgb, var(--color-accent) 34%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 12%, transparent),
+    0 0 28px color-mix(in srgb, var(--color-accent) 14%, transparent);
+}
+
+.future-card-toggle {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  padding: 1.2rem 1.2rem 1rem;
+  display: grid;
+  gap: 0.9rem;
+  cursor: pointer;
+}
+
+.future-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.future-card-icon {
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.95rem;
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-bg) 35%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.future-card-icon svg {
+  width: 1.45rem;
+  height: 1.45rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.future-card-eta,
+.future-card-panel-inner span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.future-card-eta {
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  color: var(--color-accent);
+}
+
+.future-card-copy {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.future-card-copy h3 {
+  font-size: clamp(1.3rem, 3.6vw, 1.85rem);
+}
+
+.future-card-copy p {
+  color: var(--color-text-secondary);
+}
+
+.future-card-chevron {
+  justify-self: end;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--color-primary);
+  transition: transform var(--duration-hover) var(--easing);
+}
+
+.future-card.is-open .future-card-chevron {
+  transform: rotate(45deg);
+}
+
+.future-card-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--duration-default) var(--easing);
+}
+
+.future-card-panel-inner {
+  display: grid;
+  gap: 0.9rem;
+  padding: 0 1.2rem 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.future-card-panel-inner > p:first-child {
+  padding-top: 1rem;
+}
+
+.future-card-panel-inner p {
+  color: var(--color-text-secondary);
+}
+
+.future-card-panel-inner span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--color-primary);
+}
+
+@media (hover: hover) {
+  .future-card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--color-primary) 12%, transparent);
+  }
+
+  .future-card:hover .future-card-icon {
+    box-shadow: 0 0 24px color-mix(in srgb, var(--color-primary) 16%, transparent);
+  }
+}
+
+@media (min-width: 768px) {
+  .future-layout {
+    gap: 1.8rem;
+  }
+
+  .future-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .future-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .container {
   max-width: 1280px;
   margin-left: auto;

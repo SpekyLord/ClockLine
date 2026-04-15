@@ -847,6 +847,165 @@ const ChallengesSection = {
   }
 };
 
+const FutureSection = {
+  section: null,
+  cards: [],
+  layers: [],
+  reduceMotionQuery: window.matchMedia('(prefers-reduced-motion: reduce)'),
+
+  init() {
+    this.section = document.getElementById('future');
+    if (!this.section) return;
+
+    this.cards = Array.from(this.section.querySelectorAll('[data-future-card]'));
+    this.layers = Array.from(this.section.querySelectorAll('[data-future-layer]'));
+
+    if (!this.cards.length) return;
+
+    this._bindCards();
+    this._bindParallax();
+    this._setParallax();
+  },
+
+  _getCardParts(card) {
+    return {
+      toggle: card.querySelector('[data-future-toggle]'),
+      panel: card.querySelector('[data-future-panel]')
+    };
+  },
+
+  _bindCards() {
+    this.cards.forEach((card) => {
+      const { toggle, panel } = this._getCardParts(card);
+      if (!toggle || !panel) return;
+
+      panel.style.maxHeight = '0px';
+
+      toggle.addEventListener('click', () => {
+        this.toggleCard(card);
+      });
+
+      panel.addEventListener('transitionend', (event) => {
+        if (event.propertyName !== 'max-height') return;
+        if (card.classList.contains('is-open')) {
+          panel.style.maxHeight = 'none';
+        }
+      });
+    });
+
+    this.section.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+
+      const openCard = this.section.querySelector('[data-future-card].is-open');
+      if (!openCard) return;
+
+      this.closeCard(openCard);
+    });
+  },
+
+  _bindParallax() {
+    if (!this.layers.length) return;
+
+    this.reduceMotionQuery.addEventListener('change', () => {
+      this._setParallax();
+    });
+
+    if (this.reduceMotionQuery.matches) return;
+
+    let ticking = false;
+    const update = () => {
+      if (ticking) return;
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        this._setParallax();
+        ticking = false;
+      });
+    };
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+  },
+
+  _setParallax() {
+    if (!this.section) return;
+
+    if (this.reduceMotionQuery.matches) {
+      this.section.style.setProperty('--future-layer-1-x', '0px');
+      this.section.style.setProperty('--future-layer-1-y', '0px');
+      this.section.style.setProperty('--future-layer-2-x', '0px');
+      this.section.style.setProperty('--future-layer-2-y', '0px');
+      this.section.style.setProperty('--future-layer-3-x', '0px');
+      this.section.style.setProperty('--future-layer-3-y', '0px');
+      return;
+    }
+
+    const rect = this.section.getBoundingClientRect();
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const progress = Math.max(0, Math.min(1, (viewportHeight - rect.top) / (viewportHeight + rect.height)));
+    const offset = progress - 0.5;
+
+    this.section.style.setProperty('--future-layer-1-x', `${offset * 18}px`);
+    this.section.style.setProperty('--future-layer-1-y', `${offset * -28}px`);
+    this.section.style.setProperty('--future-layer-2-x', `${offset * -16}px`);
+    this.section.style.setProperty('--future-layer-2-y', `${offset * 22}px`);
+    this.section.style.setProperty('--future-layer-3-x', `${offset * 12}px`);
+    this.section.style.setProperty('--future-layer-3-y', `${offset * -18}px`);
+  },
+
+  toggleCard(card) {
+    if (card.classList.contains('is-open')) {
+      this.closeCard(card);
+      return;
+    }
+
+    this.cards.forEach((openCard) => {
+      if (openCard !== card && openCard.classList.contains('is-open')) {
+        this.closeCard(openCard, { restoreFocus: false });
+      }
+    });
+
+    this.openCard(card);
+  },
+
+  openCard(card) {
+    const { toggle, panel } = this._getCardParts(card);
+    if (!toggle || !panel) return;
+
+    card.classList.add('is-open');
+    toggle.setAttribute('aria-expanded', 'true');
+    panel.setAttribute('aria-hidden', 'false');
+    panel.style.maxHeight = '0px';
+
+    requestAnimationFrame(() => {
+      panel.style.maxHeight = `${panel.scrollHeight}px`;
+    });
+  },
+
+  closeCard(card, options = {}) {
+    const { restoreFocus = true } = options;
+    const { toggle, panel } = this._getCardParts(card);
+    if (!toggle || !panel) return;
+
+    if (panel.style.maxHeight === 'none') {
+      panel.style.maxHeight = `${panel.scrollHeight}px`;
+      panel.offsetHeight;
+    }
+
+    toggle.setAttribute('aria-expanded', 'false');
+    panel.setAttribute('aria-hidden', 'true');
+    card.classList.remove('is-open');
+
+    requestAnimationFrame(() => {
+      panel.style.maxHeight = '0px';
+    });
+
+    if (restoreFocus) {
+      toggle.focus();
+    }
+  }
+};
+
 function updateToggleIcon() {
   const moon = document.getElementById('icon-moon');
   const sun  = document.getElementById('icon-sun');
@@ -870,6 +1029,7 @@ document.addEventListener('DOMContentLoaded', () => {
   TimelineSection.init();
   ImpactSection.init();
   ChallengesSection.init();
+  FutureSection.init();
   updateToggleIcon();
 
   // Phase 2: Hero
