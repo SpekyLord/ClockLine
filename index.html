@@ -82,9 +82,45 @@
   <!-- ============================================================
        SECTION 1: HERO / LANDING
        ============================================================ -->
-  <!-- TODO: Implement in Phase 2 -->
   <section id="hero" aria-label="Hero section">
-    <p><!-- Phase 2: Hero content goes here --></p>
+
+    <!-- Particle network canvas (background) -->
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+    <!-- Main hero content -->
+    <div class="hero-content">
+      <p class="section-label hero-label reveal">NSCI 110 &middot; BSCS 1-B &middot; Group 6</p>
+
+      <h1 class="hero-title">
+        <span id="typed-text" aria-live="polite"></span><span class="hero-cursor" aria-hidden="true">|</span>
+      </h1>
+
+      <p class="hero-subtitle" id="hero-subtitle">
+        A journey through the technologies that reshaped humanity
+      </p>
+
+      <div class="hero-members" id="hero-members" aria-label="Group members">
+        <span>Francis Austria</span>
+        <span class="hero-dot" aria-hidden="true">&middot;</span>
+        <span>Fritz Cartagena</span>
+        <span class="hero-dot" aria-hidden="true">&middot;</span>
+        <span>Rembrandt Monteclaro</span>
+        <span class="hero-dot" aria-hidden="true">&middot;</span>
+        <span>Lance Nono</span>
+        <span class="hero-dot" aria-hidden="true">&middot;</span>
+        <span>Prince John Peconcillo</span>
+      </div>
+    </div>
+
+    <!-- Scroll-down arrow -->
+    <a href="#what-is" class="scroll-arrow" aria-label="Scroll to next section">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </a>
+
   </section>
 
   <!-- ============================================================
