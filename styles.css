@@ -99,3 +99,201 @@ section {
   outline-offset: 3px;
   border-radius: 2px;
 }
+
+/* ── Utility: Container ─────────────────────────────────────── */
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* ── Utility: Card ──────────────────────────────────────────── */
+.card {
+  background-color: var(--color-surface);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 15%, transparent);
+  transition:
+    border-color var(--duration-hover) var(--easing),
+    box-shadow   var(--duration-hover) var(--easing);
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+/* ── Utility: Buttons ───────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-primary);
+  color: #0a0a0f;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    box-shadow  var(--duration-hover) var(--easing),
+    transform   var(--duration-hover) var(--easing),
+    background-color var(--duration-hover) var(--easing);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--color-primary) 60%, transparent);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-primary);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color var(--duration-hover) var(--easing),
+    box-shadow       var(--duration-hover) var(--easing),
+    transform        var(--duration-hover) var(--easing);
+}
+
+.btn-secondary:hover {
+  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--color-primary) 30%, transparent);
+  transform: translateY(-1px);
+}
+
+/* ── Utility: Section Label ─────────────────────────────────── */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+/* ── Utility: Glow Text ─────────────────────────────────────── */
+.glow-text {
+  text-shadow: 0 0 20px color-mix(in srgb, var(--color-primary) 60%, transparent);
+  color: var(--color-primary);
+}
+
+/* ── Utility: Scroll Reveal ─────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity   var(--duration-reveal) var(--easing),
+    transform var(--duration-reveal) var(--easing);
+}
+
+/* ── Scroll Progress Bar ────────────────────────────────────── */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  z-index: 9999;
+  transition: width 100ms linear;
+  pointer-events: none;
+}
+
+/* ── Navigation Dots ────────────────────────────────────────── */
+#nav-dots {
+  position: fixed;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 9000;
+}
+
+/* Hide on small screens — not enough room */
+@media (max-width: 768px) {
+  #nav-dots {
+    display: none;
+  }
+}
+
+.nav-dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-primary);
+  background-color: transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-hover) var(--easing),
+    box-shadow       var(--duration-hover) var(--easing),
+    transform        var(--duration-hover) var(--easing);
+}
+
+.nav-dot:hover,
+.nav-dot.active {
+  background-color: var(--color-primary);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-primary) 70%, transparent);
+}
+
+.nav-dot.active {
+  transform: scale(1.3);
+}
+
+/* ── Theme Toggle Button ────────────────────────────────────── */
+#theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--color-surface);
+  border: 1.5px solid color-mix(in srgb, var(--color-primary) 40%, transparent);
+  color: var(--color-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  transition:
+    box-shadow       var(--duration-hover) var(--easing),
+    border-color     var(--duration-hover) var(--easing),
+    background-color var(--duration-default) var(--easing);
+}
+
+#theme-toggle:hover {
+  box-shadow: 0 0 16px color-mix(in srgb, var(--color-primary) 50%, transparent);
+  border-color: var(--color-primary);
+}
+
+#theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}

@@ -35,6 +35,51 @@
 <body>
 
   <!-- ============================================================
+       SCROLL PROGRESS BAR
+       ============================================================ -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       THEME TOGGLE BUTTON
+       ============================================================ -->
+  <button id="theme-toggle" aria-label="Toggle dark/light mode">
+    <!-- Moon icon — shown in dark mode -->
+    <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+    <!-- Sun icon — shown in light mode -->
+    <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         style="display:none">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1"  x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22"   x2="5.64" y2="5.64"/>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1"  y1="12" x2="3"  y2="12"/>
+      <line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78"  x2="5.64" y2="18.36"/>
+      <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"/>
+    </svg>
+  </button>
+
+  <!-- ============================================================
+       NAVIGATION DOTS (right-side section jump)
+       ============================================================ -->
+  <nav id="nav-dots" aria-label="Section navigation">
+    <a href="#hero"       class="nav-dot" data-section="hero"       aria-label="Go to Hero"></a>
+    <a href="#what-is"    class="nav-dot" data-section="what-is"    aria-label="Go to What is the Information Age?"></a>
+    <a href="#timeline"   class="nav-dot" data-section="timeline"   aria-label="Go to Timeline"></a>
+    <a href="#impact"     class="nav-dot" data-section="impact"     aria-label="Go to Impact on Quality of Life"></a>
+    <a href="#challenges" class="nav-dot" data-section="challenges" aria-label="Go to Challenges and Ethical Issues"></a>
+    <a href="#future"     class="nav-dot" data-section="future"     aria-label="Go to The Future"></a>
+    <a href="#poll"       class="nav-dot" data-section="poll"       aria-label="Go to Live Poll"></a>
+    <a href="#simulator"  class="nav-dot" data-section="simulator"  aria-label="Go to Internet Simulator"></a>
+    <a href="#credits"    class="nav-dot" data-section="credits"    aria-label="Go to Conclusion and Credits"></a>
+  </nav>
+
+  <!-- ============================================================
        SECTION 1: HERO / LANDING
        ============================================================ -->
   <!-- TODO: Implement in Phase 2 -->
