@@ -1036,7 +1036,6 @@ const PollSection = {
   qrLink: null,
   app: null,
   db: null,
-  sdk: null,
   pollRef: null,
   isSubmitting: false,
   hasRealtimeData: false,
@@ -1176,7 +1175,7 @@ const PollSection = {
       if (!confirmed) return;
 
       try {
-        await this.sdk.set(this.pollRef, { ...this.defaults });
+        await this.pollRef.set({ ...this.defaults });
         this._setError('');
         this._setConfirmation('Poll has been reset by admin.');
       } catch (error) {
@@ -1191,13 +1190,11 @@ const PollSection = {
       return;
     }
 
-    if (!window.__FIREBASE_RTDB__) {
-      this._setError('Live sync is offline. Firebase module failed to load.');
+    if (!window.firebase || !window.firebase.apps) {
+      this._setError('Live sync is offline. Add Firebase config to enable real-time polling.');
       this._setLoading('Live poll is unavailable in this build.', true);
       return;
     }
-
-    this.sdk = window.__FIREBASE_RTDB__;
 
     const firebaseConfig = window.__FIREBASE_CONFIG__ || {
       apiKey: 'REPLACE_WITH_FIREBASE_API_KEY',
@@ -1231,9 +1228,9 @@ const PollSection = {
     }
 
     try {
-      this.app = this.sdk.getOrInitApp(firebaseConfig);
-      this.db = this.sdk.getDatabase(this.app);
-      this.pollRef = this.sdk.ref(this.db, 'polls/info_age_poll');
+      this.app = window.firebase.apps.length ? window.firebase.app() : window.firebase.initializeApp(firebaseConfig);
+      this.db = window.firebase.database(this.app);
+      this.pollRef = this.db.ref('polls/info_age_poll');
       this._setError('');
       this._setLoading('Connecting to realtime results...', true);
       this._listenForResults();
@@ -1247,7 +1244,7 @@ const PollSection = {
     if (!this.pollRef || this.isFirebaseListenerBound) return;
     this.isFirebaseListenerBound = true;
 
-    this.sdk.onValue(this.pollRef, (snapshot) => {
+    this.pollRef.on('value', (snapshot) => {
       const raw = snapshot && snapshot.val() ? snapshot.val() : {};
       const normalized = { ...this.defaults };
 
@@ -1291,8 +1288,8 @@ const PollSection = {
     this._setButtonsDisabled(this.hasVoted);
 
     try {
-      const optionRef = this.sdk.child(this.pollRef, key);
-      await this.sdk.runTransaction(optionRef, (current) => {
+      const optionRef = this.pollRef.child(key);
+      await optionRef.transaction((current) => {
         const base = Number(current);
         return Number.isFinite(base) ? base + 1 : 1;
       });
